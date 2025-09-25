@@ -135,3 +135,8 @@ out/
 # Quarkus specific
 .quarkus/
 quarkus.log
+
+# local personal templates 
+templates/personal/
+
+images/gemini-generation-image.png
