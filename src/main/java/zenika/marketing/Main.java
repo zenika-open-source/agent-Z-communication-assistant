@@ -1,4 +1,4 @@
-package com.example;
+package zenika.marketing;
 
 import com.google.genai.Client;
 import com.google.genai.errors.GenAiIOException;
