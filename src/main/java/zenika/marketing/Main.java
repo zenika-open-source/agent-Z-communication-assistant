@@ -15,6 +15,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import zenika.marketing.config.MODE_FEATURE;
+
 @QuarkusMain
 public class Main {
 

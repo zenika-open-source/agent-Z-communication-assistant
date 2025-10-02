@@ -1,4 +1,4 @@
-package com.example;
+package zenika.marketing.config;
 
 public enum MODE_FEATURE {
     IMAGE,
