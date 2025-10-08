@@ -1,6 +1,6 @@
 {
   "files": [
-    "README.md"    
+    "README.md"
   ],
   "imageSize": 100,
   "contributorsPerLine": 7,
@@ -15,9 +15,21 @@
     }
   },
   "skipCi": true,
-  "contributors": [],
-  "projectName": "Agent Z Communication Assistant",
-  "projectOwner": "jeanphi-baconnais",
+  "contributors": [
+    {
+      "login": "jeanphi-baconnais",
+      "name": "Jean-Phi Baconnais",
+      "avatar_url": "https://avatars.githubusercontent.com/u/32639372?v=4",
+      "profile": "https://jeanphi-baconnais.gitlab.io/",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "projectName": "agent-Z-communication-assistant",
+  "projectOwner": "zenika-open-source",
   "repoType": "github",
-  "repoHost": "https://github.com/zenika-open-source/agent-Z-communication-assistant"
+  "repoHost": "https://github.com/zenika-open-source/agent-Z-communication-assistant",
+  "commitType": "docs",
+  "commitConvention": "angular"
 }
