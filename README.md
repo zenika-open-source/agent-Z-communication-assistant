@@ -2,6 +2,8 @@
 
 This Quarkus project uses Gemini and google-genai library to generate image from templates. This can allows us to save time for our communication of social network.
 
+> ⚠️ Be careful about the images you use. Please contact the person if you are using their images before using them and integrating them into this API.
+
 ## 🙌 Features
 
 - 🚀 **Quarkus Framework**: Fast startup and low memory footprint
