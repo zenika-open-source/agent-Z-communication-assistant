@@ -91,6 +91,9 @@ public class Main {
         private int generateImage() throws IOException {
             try (Client client = new Client.Builder()
                     .apiKey(System.getenv("GOOGLE_API_KEY"))
+                    //.project(System.getenv("GOOGLE_CLOUD_PROJECT_ID"))
+                    //.location(System.getenv("GOOGLE_CLOUD_LOCATION"))
+                    //.vertexAI(true)
                     .build()) {
 
                 Log.info("✨ Start using Google AI API with this model " + geminiModelImage);
@@ -112,9 +115,7 @@ public class Main {
                                 Part.fromBytes(Files.readAllBytes(file2), getMimeType(file2.toString())),
                                 Part.fromText(prompt)
                         ),
-                        GenerateContentConfig.builder()
-                                .responseModalities("TEXT", "IMAGE")
-                                .build());
+                       null);
 
                 for (Part part : Objects.requireNonNull(response.parts())) {
                     if (part.inlineData().isPresent()) {
