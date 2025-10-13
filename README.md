@@ -65,10 +65,19 @@ app.gemini.model=gemini-2.5-flash-image-preview
 app.result.filename=gemini-generation-image.png
 app.prompt=Your custom prompt for image generation
 
-# Template Configuration
+# Media Type Configuration
+app.media.type=image
+# Supported values: image, video
+
+# Template and Files Configuration
 app.template.path=images/template.png
-app.template.default=images/template.png
+app.file1.path=images/file1.png
+app.file2.path=images/file2.png
 app.template.formats=png,jpg,jpeg
+
+# Video Generation Configuration (for video media type)
+app.video.ratio=16:9
+app.video.resolution=1080p
 
 # Quarkus Configuration
 quarkus.http.port=8080
@@ -77,22 +86,58 @@ quarkus.log.level=INFO
 
 ### Template Configuration Options
 
-The application now supports configurable templates for image generation:
+The application supports two main modes: **Image Generation** and **Video Generation**.
 
-- **`app.template.path`**: Path to the template image file to use (default: `images/template.png`)
-- **`app.template.default`**: Fallback template path if the primary template is not found
+#### Image Generation Mode
+
+- **`app.media.type`**: Set to `image` for image generation (default)
+- **`app.gemini.model`**: Gemini model for image generation (e.g., `gemini-2.5-flash-image`)
+- **`app.template.path`**: Path to the template image file to use
+- **`app.file1.path`**: Path to the first additional image (e.g., conference logo)
+- **`app.file2.path`**: Path to the second additional image (e.g., speaker photo)
 - **`app.template.formats`**: Supported image formats (png, jpg, jpeg, gif, webp)
+
+#### Video Generation Mode
+
+- **`app.media.type`**: Set to `video` for video generation
+- **`app.gemini.model.veo`**: Veo model for video generation (e.g., `veo-3.0-fast-generate-001`)
+- **`app.video.ratio`**: Video aspect ratio (e.g., `16:9`, `9:16`, `1:1`)
+- **`app.video.resolution`**: Video resolution (e.g., `1080p`, `720p`, `4k`)
+- **`app.template.path`**: Path to the base image for video generation
 
 ### Using Custom Templates
 
 1. **Place your template images in the `images/` directory**
 2. **Configure the template path in `application.properties`:**
+
    ```properties
+   # For image generation
+   app.media.type=image
    app.template.path=images/my-custom-template.png
+   app.file1.path=images/logo.png
+   app.file2.path=images/speaker-photo.jpg
+
+   # For video generation
+   app.media.type=video
+   app.template.path=images/base-image.png
+   app.video.ratio=16:9
+   app.video.resolution=1080p
    ```
 3. **Or pass it as a command-line parameter:**
    ```bash
-   java -jar target/quarkus-app/quarkus-run.jar -Dapp.template.path=images/special-template.jpg
+   # Image generation
+   java -jar target/quarkus-app/quarkus-run.jar \
+     -Dapp.media.type=image \
+     -Dapp.template.path=images/special-template.jpg \
+     -Dapp.file1.path=images/conference-logo.png \
+     -Dapp.file2.path=images/speaker.jpg
+
+   # Video generation
+   java -jar target/quarkus-app/quarkus-run.jar \
+     -Dapp.media.type=video \
+     -Dapp.template.path=images/base.png \
+     -Dapp.video.ratio=9:16 \
+     -Dapp.video.resolution=1080p
    ```
 
 ### Supported Template Formats
