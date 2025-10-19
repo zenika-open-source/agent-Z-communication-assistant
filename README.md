@@ -8,7 +8,9 @@ This Quarkus project uses Gemini and google-genai library to generate image from
 
 - 🚀 **Quarkus Framework**: Fast startup and low memory footprint
 - 🤖 **Gemini AI Integration**: Uses Google's latest Gemini models
-- 🎨 **Image Description Generation**: Creates detailed descriptions for image generation
+- 🎨 **Image Generation**: Creates images from templates and prompts
+- 🎥 **Video Generation**: Generate videos with Veo models
+- 💻 **Picocli CLI**: Rich command-line interface with comprehensive options
 - 📝 **Text Generation**: General-purpose text generation capabilities
 
 ## 🛠️ Prerequisites
@@ -20,19 +22,22 @@ This Quarkus project uses Gemini and google-genai library to generate image from
 ## 👨‍💻 Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone git@github.com:zenika-open-source/agent-Z-communication-assistant.git
    cd agent-Z-communication-assistant
    ```
 
 2. **Set up your Google AI API Key**
-   
+
    Option A: Environment Variable (Recommended)
+
    ```bash
    export GOOGLE_API_KEY=your-api-key-here
    ```
-   
+
    Option B: Configuration File
+
    ```bash
    # Edit src/main/resources/application.properties
    google.ai.api.key=your-api-key-here
@@ -45,11 +50,45 @@ This Quarkus project uses Gemini and google-genai library to generate image from
 
 ## 🚀 Usage
 
+### Command Line Interface (Picocli)
+
+The application now provides a rich CLI with Picocli. For detailed CLI documentation, see [CLI.md](CLI.md).
+
+**Quick examples:**
+
+```bash
+# Show help
+mvn quarkus:dev -Dquarkus.args="--help"
+
+# Generate image with custom prompt
+mvn quarkus:dev -Dquarkus.args="--prompt 'Create a vibrant conference banner' -o output.png"
+
+# Generate video
+mvn quarkus:dev -Dquarkus.args="-t video --prompt 'Conference intro' --vertex"
+```
+
 ### Running the Application
 
 **Development Mode (with hot reload):**
+
 ```bash
 mvn quarkus:dev
+```
+
+**With CLI arguments:**
+
+```bash
+mvn quarkus:dev -Dquarkus.args="--type image --prompt 'Your prompt here' --output result.png"
+```
+
+**Production mode:**
+
+```bash
+# Build
+mvn clean package
+
+# Run
+java -jar target/quarkus-app/quarkus-run.jar --help
 ```
 
 ## Configuration
@@ -143,6 +182,7 @@ The application supports two main modes: **Image Generation** and **Video Genera
 ### Supported Template Formats
 
 The application automatically detects and supports the following image formats:
+
 - **PNG** (`.png`) - Recommended for templates with transparency
 - **JPEG** (`.jpg`, `.jpeg`) - Good for photographic templates
 - **GIF** (`.gif`) - Supports animated templates
@@ -151,6 +191,7 @@ The application automatically detects and supports the following image formats:
 ### Template Validation
 
 The application includes built-in template validation:
+
 - Checks if the specified template file exists
 - Falls back to the default template if the primary template is missing
 - Provides clear error messages if no valid template is found
@@ -167,6 +208,7 @@ The application includes built-in template validation:
 ## ⁉️ Support
 
 For support and questions:
+
 - Create an issue in the GitLab repository
 - Check the [Google AI documentation](https://ai.google.dev/docs)
 - Review the [Quarkus guides](https://quarkus.io/guides/)
