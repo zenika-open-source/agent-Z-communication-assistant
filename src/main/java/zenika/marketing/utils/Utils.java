@@ -1,4 +1,4 @@
-package zenika.marketing.services;
+package zenika.marketing.utils;
 
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;

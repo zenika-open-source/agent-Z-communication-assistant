@@ -8,74 +8,73 @@ import zenika.marketing.config.MODE_FEATURE;
 import zenika.marketing.services.GeminiServices;
 
 @Command(
-    name = "generate",
-    mixinStandardHelpOptions = true,
-    version = "1.0.0",
-    description = "Generate images or videos using Gemini AI"
+        name = "generate",
+        mixinStandardHelpOptions = true,
+        version = "1.0.0",
+        description = "Generate images or videos using Gemini AI"
 )
 public class GenerateCommand implements Runnable {
-
 
     private final GeminiServices geminiServices;
 
     private final ConfigProperties config;
 
     @Option(
-        names = {"-t", "--type"},
-        description = "Media type to generate: ${COMPLETION-CANDIDATES} (default: ${DEFAULT-VALUE})",
-        defaultValue = "image"
+            names = {"-t", "--type"},
+            description = "Media type to generate: ${COMPLETION-CANDIDATES} (default: ${DEFAULT-VALUE})"
     )
     MODE_FEATURE mediaType;
 
     @Option(
-        names = {"-p", "--prompt"},
-        description = "Prompt for generation (default: from application.properties)"
+            names = {"-p", "--prompt"},
+            description = "Prompt for generation (default: from application.properties)",
+            interactive = true
     )
     String prompt;
 
     @Option(
-        names = {"-o", "--output"},
-        description = "Output filename (default: ${DEFAULT-VALUE})"
+            names = {"-o", "--output"},
+            description = "Output filename (default: ${DEFAULT-VALUE})"
     )
     String output;
 
     @Option(
-        names = {"--template"},
-        description = "Path to template image (default: from application.properties)"
+            names = {"--template"},
+            description = "Path to template image (default: from application.properties)"
     )
     String templatePath;
 
     @Option(
-        names = {"--file1"},
-        description = "Path to first additional image (default: from application.properties)"
+            names = {"--file1"},
+            description = "Path to first additional image (default: from application.properties)"
     )
     String file1Path;
 
     @Option(
-        names = {"--file2"},
-        description = "Path to second additional image (default: from application.properties)"
+            names = {"--file2"},
+            description = "Path to second additional image (default: from application.properties)"
     )
     String file2Path;
 
     @Option(
-        names = {"-m", "--model"},
-        description = "Gemini model to use (default: from application.properties)"
+            names = {"-m", "--model"},
+            description = "Gemini model to use (default: from application.properties)"
     )
     String model;
 
     @Option(
-        names = {"--ratio"},
-        description = "Video aspect ratio (for video generation, default: from application.properties)"
+            names = {"--ratio"},
+            description = "Video aspect ratio (for video generation, default: from application.properties)"
     )
     String videoRatio;
 
     @Option(
-        names = {"--resolution"},
-        description = "Video resolution (for video generation, default: from application.properties)"
+            names = {"--resolution"},
+            description = "Video resolution (for video generation, default: from application.properties)"
     )
     String videoResolution;
 
-    public GenerateCommand(GeminiServices geminiServices, ConfigProperties config){
+    public GenerateCommand(GeminiServices geminiServices, ConfigProperties config) {
         this.geminiServices = geminiServices;
         this.config = config;
     }
@@ -99,7 +98,7 @@ public class GenerateCommand implements Runnable {
                 String finalModel = model != null ? model : config.getDefaultGeminiVeoModel();
                 geminiServices.generateVideo(finalModel, finalPrompt, finalOutput, finalTemplatePath, finalVideoRatio, finalVideoResolution);
             } else {
-                Log.error("🏔️ Invalid media type: " + mediaType);
+                Log.error("🏔️ Invalid or missing media type");
                 System.exit(1);
             }
         } catch (Exception e) {
