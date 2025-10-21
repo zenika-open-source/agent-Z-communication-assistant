@@ -135,3 +135,5 @@ out/
 # Quarkus specific
 .quarkus/
 quarkus.log
+images/
+!images/templates
