@@ -111,13 +111,11 @@ public class GeminiServices {
 
             Video generatedVideo = operation.response().get().generatedVideos().get().get(0).video().get();
 
-            if (!client.vertexAI()) {
-                try {
-                    client.files.download(generatedVideo, output, null);
-                    Log.info("✨ Video downloaded to " + output);
-                } catch (GenAiIOException e) {
-                    Log.error("An error occurred while downloading the video: " + e.getMessage());
-                }
+            try {
+                client.files.download(generatedVideo, output, null);
+                Log.info("✨ Video downloaded to " + output);
+            } catch (GenAiIOException e) {
+                Log.error("An error occurred while downloading the video: " + e.getMessage());
             }
 
             Log.info("✨ Video generated: " + output);

@@ -21,14 +21,14 @@ public class GenerateCommand implements Runnable {
 
     @Option(
             names = {"-t", "--type"},
-            description = "Media type to generate: ${COMPLETION-CANDIDATES} (default: ${DEFAULT-VALUE})"
+            description = "Media type to generate: ${COMPLETION-CANDIDATES} (default: ${DEFAULT-VALUE})",
+            defaultValue = "IMAGE"
     )
     MODE_FEATURE mediaType;
 
     @Option(
             names = {"-p", "--prompt"},
-            description = "Prompt for generation (default: from application.properties)",
-            interactive = true
+            description = "Prompt for generation"
     )
     String prompt;
 
@@ -40,39 +40,27 @@ public class GenerateCommand implements Runnable {
 
     @Option(
             names = {"--template"},
-            description = "Path to template image (default: from application.properties)"
+            description = "Path to template image"
     )
     String templatePath;
 
     @Option(
             names = {"--file1"},
-            description = "Path to first additional image (default: from application.properties)"
+            description = "Path to first additional image"
     )
     String file1Path;
 
     @Option(
             names = {"--file2"},
-            description = "Path to second additional image (default: from application.properties)"
+            description = "Path to second additional image"
     )
     String file2Path;
 
     @Option(
             names = {"-m", "--model"},
-            description = "Gemini model to use (default: from application.properties)"
+            description = "Gemini model to use"
     )
     String model;
-
-    @Option(
-            names = {"--ratio"},
-            description = "Video aspect ratio (for video generation, default: from application.properties)"
-    )
-    String videoRatio;
-
-    @Option(
-            names = {"--resolution"},
-            description = "Video resolution (for video generation, default: from application.properties)"
-    )
-    String videoResolution;
 
     public GenerateCommand(GeminiServices geminiServices, ConfigProperties config) {
         this.geminiServices = geminiServices;
@@ -88,8 +76,8 @@ public class GenerateCommand implements Runnable {
             String finalTemplatePath = templatePath != null ? templatePath : config.getDefaultTemplatePath();
             String finalFile1Path = file1Path != null ? file1Path : config.getDefaultFile1Path();
             String finalFile2Path = file2Path != null ? file2Path : config.getDefaultFile2Path();
-            String finalVideoRatio = videoRatio != null ? videoRatio : config.getDefaultVideoRatio();
-            String finalVideoResolution = videoResolution != null ? videoResolution : config.getDefaultVideoResolution();
+            String finalVideoRatio = config.getDefaultVideoRatio();
+            String finalVideoResolution = config.getDefaultVideoResolution();
 
             if (mediaType == MODE_FEATURE.IMAGE) {
                 String finalModel = model != null ? model : config.getDefaultGeminiModelImage();
