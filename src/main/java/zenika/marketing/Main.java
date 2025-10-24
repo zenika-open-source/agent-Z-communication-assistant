@@ -9,6 +9,7 @@ import zenika.marketing.cli.GenerateCommand;
 import jakarta.inject.Inject;
 import zenika.marketing.config.ConfigProperties;
 import zenika.marketing.services.GeminiServices;
+import zenika.marketing.services.TemplateService;
 
 @QuarkusMain
 public class Main implements QuarkusApplication {
@@ -20,6 +21,9 @@ public class Main implements QuarkusApplication {
     GeminiServices geminiServices;
 
     @Inject
+    TemplateService templateService;
+
+    @Inject
     ConfigProperties config;
 
     public static void main(String... args) {
@@ -28,6 +32,6 @@ public class Main implements QuarkusApplication {
 
     @Override
     public int run(String... args) throws Exception {
-        return new CommandLine(new GenerateCommand(geminiServices, config), factory).execute(args);
+        return new CommandLine(new GenerateCommand(geminiServices, config, templateService), factory).execute(args);
     }
 }
