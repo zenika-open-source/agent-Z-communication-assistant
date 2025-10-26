@@ -1,0 +1,26 @@
+[
+  {
+    "name": "generate-image-blog-post",
+    "description" : "Generate an image for a blog post",
+    "type": "IMAGE",
+    "prompt": "I would like to create an image from the template image %s integrating these elements: - replace 'Writer Name' by %s  - replace 'Post title' by %s. Please center this title and use 2 lines at maximum. - replace the second white square by the speaker photo (file2). Please don't modify the name of the author and the title of the blog post."
+  },
+  {
+    "name": "generate-image-speaker-event",
+    "description": "Generate an image to announce a speaker for a conference",
+    "type": "IMAGE",
+    "prompt": "I would like to create an image from the template image %s integrating these elements: - replace 'Speaker Name' by %s  - replace 'Talk title' by %s. Please center this title and use 2 lines at maximum. - replace the first white square by the logo of the conference (in file1). - replace the second white square by the speaker photo (file2). Please don't modify the name of the author and the title of the talk."
+  },
+  {
+    "name": "generate-video-speaker-event",
+    "description": "Generate a video to annunce a speaker for a conference",
+    "type": "VIDEO",
+    "prompt": "I'd like to create a short animation from the template file to move the speaker photo, the title of the talk."
+  },
+  {
+    "name": "generate-post-speaker-event",
+    "description": "Generate a Linkedin & Bluesky post",
+    "type": "POST",
+    "prompt": "I'd like to create two post to announce %s as a speaker for the conference %s in %s. The first one is for Linkedin, the second for Bluesky."
+  }
+]
