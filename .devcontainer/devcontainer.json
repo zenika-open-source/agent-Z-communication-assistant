@@ -1,0 +1,30 @@
+{
+  "name": "Agent Z Communication Assistant",
+  "image": "mcr.microsoft.com/devcontainers/java:21-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "21",
+      "installMaven": true,
+      "mavenVersion": "latest"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-maven",
+        "redhat.java",
+        "redhat.vscode-quarkus"
+      ]
+    }
+  },
+  "remoteUser": "root"
+}
