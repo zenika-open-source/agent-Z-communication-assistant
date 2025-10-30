@@ -40,6 +40,9 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.title")
     String defaultTitle;
 
+    @ConfigProperty(name = "app.z-photo")
+    String defaultZPhoto;
+
     public String getDefaultGeminiModelImage() {
         return defaultGeminiModelImage;
     }
@@ -79,6 +82,8 @@ public class ConfigProperties {
     public String getDefaultName() { return defaultName; }
 
     public String getDefaultTitle() { return defaultTitle; }
+
+    public String getDefaultZPhoto() { return defaultZPhoto; }
 
     public void setDefaultGeminiModelImage(String defaultGeminiModelImage) {
         this.defaultGeminiModelImage = defaultGeminiModelImage;
@@ -124,16 +129,18 @@ public class ConfigProperties {
         this.defaultTitle = defaultTitle;
     }
 
-    public String getFieldByValue(String field, ConfigProperties config) {
-        switch (FIELDS_PROMPT.valueOf(field)) {
-            case NAME:
-                return config.getDefaultName();
-            case TITLE:
-                return config.getDefaultTitle();
-            case TEMPLATE:
-                return config.getDefaultTemplatePath();
-            default:
-                return "";
-        }
+    public void setZPhoto(String defaultZPhoto) {
+        this.defaultZPhoto = defaultZPhoto;
     }
+
+    public String getFieldByValue(String field, ConfigProperties config) {
+        return switch (FIELDS_PROMPT.valueOf(field)) {
+            case NAME -> config.getDefaultName();
+            case TITLE -> config.getDefaultTitle();
+            case TEMPLATE -> config.getDefaultTemplatePath();
+            case Z_PHOTO -> config.getDefaultZPhoto();
+            default -> "";
+        };
+    }
+
 }

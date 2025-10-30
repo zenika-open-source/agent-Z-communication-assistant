@@ -30,19 +30,10 @@ public class GeminiServices {
 
             // Validate files exist
             Path templateFile = Path.of(config.getDefaultTemplatePath());
-            Path file1 = Path.of(config.getDefaultFile1Path());
-            Path file2 = Path.of(config.getDefaultFile1Path());
+            Path zPhoto = Path.of(config.getDefaultZPhoto());
 
             if (!Files.exists(templateFile)) {
                 Log.error("❌ Template file not found: " + config.getDefaultTemplatePath());
-                System.exit(1);
-            }
-            if (!Files.exists(file1)) {
-                Log.error("❌ File 1 not found: " + config.getDefaultFile1Path());
-                System.exit(1);
-            }
-            if (!Files.exists(file2)) {
-                Log.error("❌ File 2 not found: " + config.getDefaultFile2Path());
                 System.exit(1);
             }
 
@@ -52,8 +43,7 @@ public class GeminiServices {
                     model,
                     Content.fromParts(
                             Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
-                            Part.fromBytes(Files.readAllBytes(file1), Utils.getMimeType(file1.toString())),
-                            Part.fromBytes(Files.readAllBytes(file2), Utils.getMimeType(file2.toString())),
+                            Part.fromBytes(Files.readAllBytes(zPhoto), Utils.getMimeType(zPhoto.toString())),
                             Part.fromText(prompt)
                     ),
                     null);

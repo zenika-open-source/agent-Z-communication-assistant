@@ -56,6 +56,12 @@ public class GenerateImageCommand implements Runnable {
     String model;
 
     @Option(
+            names = {"--z-photo"},
+            description = "Zenika photo"
+    )
+    String zPhoto;
+
+    @Option(
             names = {"--template-name"},
             description = "Name of the template to use",
             required = true
@@ -81,6 +87,7 @@ public class GenerateImageCommand implements Runnable {
             config.setDefaultName(name != null ? name : config.getDefaultName());
             config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
             config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
+            config.setZPhoto(zPhoto != null ? zPhoto : config.getDefaultZPhoto());
 
             String completedPrompt = templateService.preparePrompt(template, config);
 

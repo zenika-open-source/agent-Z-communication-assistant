@@ -4,8 +4,8 @@
     "description" : "Generate an image for a blog post",
     "type": "IMAGE",
     "template": "images/templates/blog.png",
-    "fields": ["NAME", "TITLE"],
-    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Writer Name' by %NAME%  - replace 'Post title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the second white square by the %s file. Please don't modify the name of the author and the title of the blog post."
+    "fields": ["NAME", "TITLE", "Z_PHOTO"],
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Writer Name' by %NAME%  - replace 'Post title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the second white square by the photo from this %Z_PHOTO% file. Please don't modify the name of the author and the title of the blog post."
   },
   {
     "name": "generate-image-speaker-event",
