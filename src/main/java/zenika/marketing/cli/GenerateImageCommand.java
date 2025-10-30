@@ -27,7 +27,7 @@ public class GenerateImageCommand implements Runnable {
 
     @Option(
             names = {"-o", "--output"},
-            description = "Output filename (default: ${DEFAULT-VALUE})"
+            description = "Output filename"
     )
     String output;
 
@@ -38,16 +38,16 @@ public class GenerateImageCommand implements Runnable {
     String templatePath;
 
     @Option(
-            names = {"--file1"},
-            description = "Path to first additional image"
+            names = {"--name"},
+            description = "Speaker or writer Name"
     )
-    String file1Path;
+    String name;
 
     @Option(
-            names = {"--file2"},
-            description = "Path to second additional image"
+            names = {"--title"},
+            description = "Blog post or talk title"
     )
-    String file2Path;
+    String title;
 
     @Option(
             names = {"-m", "--model"},
@@ -68,27 +68,30 @@ public class GenerateImageCommand implements Runnable {
             var template = templateService.waitAValidTemplateByUser(templateName);
 
             // Check that the template is of type IMAGE
-            if (template.type() != MODE_FEATURE.IMAGE) {
-                Log.error("❌ Error: Template '" + templateName + "' is not an IMAGE template");
+            if (!template.type().equals(MODE_FEATURE.IMAGE.toString())) {
+                Log.error("❌ Error: Template '" + templateName + "' is not an IMAGE template (" + template.type() + ")");
                 System.exit(1);
                 return;
             }
 
             String templatePrompt = template.prompt();
-            String finalOutput = output != null ? output : config.getDefaultResultFilename();
             String finalTemplatePath = templatePath != null ? templatePath : config.getDefaultTemplatePath();
-            String finalFile1Path = file1Path != null ? file1Path : config.getDefaultFile1Path();
-            String finalFile2Path = file2Path != null ? file2Path : config.getDefaultFile2Path();
             String finalModel = model != null ? model : config.getDefaultGeminiModelImage();
+
+            config.setDefaultName(name != null ? name : config.getDefaultName());
+            config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
+            config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
+
+            String completedPrompt = templateService.preparePrompt(template, config);
+
+            Log.info("\uD83D\uDCDD \uD83D\uDC49 Prompt: \n \t " + completedPrompt + "\n");
 
             geminiServices.generateImage(
                     finalModel,
-                    templatePrompt,
-                    finalOutput,
-                    finalTemplatePath,
-                    finalFile1Path,
-                    finalFile2Path
+                    completedPrompt,
+                    config
             );
+            System.exit(0);
 
         } catch (Exception e) {
             Log.error("❌ Error: " + e.getMessage(), e);

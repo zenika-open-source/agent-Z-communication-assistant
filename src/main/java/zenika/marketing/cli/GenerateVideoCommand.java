@@ -68,7 +68,7 @@ public class GenerateVideoCommand implements Runnable {
             var template = templateService.waitAValidTemplateByUser(templateName);
 
             // Check that the template is of type VIDEO
-            if (template.type() != MODE_FEATURE.VIDEO) {
+            if (!template.type().equals(MODE_FEATURE.VIDEO)) {
                 Log.error("❌ Error: Template '" + templateName + "' is not a VIDEO template");
                 System.exit(1);
                 return;

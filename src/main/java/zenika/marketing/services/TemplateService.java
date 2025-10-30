@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import zenika.marketing.config.ConfigProperties;
+import zenika.marketing.config.FIELDS_PROMPT;
 import zenika.marketing.domain.Template;
 
 import java.io.InputStream;
@@ -66,5 +68,20 @@ public class TemplateService {
 
         return selectedTemplate.get();
 
+    }
+
+    public String preparePrompt(Template temp, ConfigProperties config) {
+        var finalPrompt = temp.prompt();
+
+        // Template (outside fields)
+        finalPrompt = finalPrompt.replaceFirst("%".concat(FIELDS_PROMPT.TEMPLATE.getValue()).concat("%"), temp.template());
+
+        if (!temp.fields().isEmpty()) {
+            for (String field : temp.fields()) {
+                finalPrompt = finalPrompt.replaceFirst("%".concat(field).concat("%"), config.getFieldByValue(field, config));
+            }
+        }
+
+        return finalPrompt;
     }
 }

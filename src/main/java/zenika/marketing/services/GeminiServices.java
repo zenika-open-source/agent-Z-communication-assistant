@@ -21,8 +21,7 @@ public class GeminiServices {
     @Inject
     ConfigProperties config;
 
-    public void generateImage(String model, String prompt, String output, String templatePath,
-                              String file1Path, String file2Path) throws IOException {
+    public void generateImage(String model, String prompt, ConfigProperties config) throws IOException {
         try (Client client = new Client.Builder()
                 .apiKey(System.getenv("GOOGLE_API_KEY"))
                 .build()) {
@@ -30,20 +29,20 @@ public class GeminiServices {
             Log.info("✨ Start using Google AI API with model " + model);
 
             // Validate files exist
-            Path templateFile = Path.of(templatePath);
-            Path file1 = Path.of(file1Path);
-            Path file2 = Path.of(file2Path);
+            Path templateFile = Path.of(config.getDefaultTemplatePath());
+            Path file1 = Path.of(config.getDefaultFile1Path());
+            Path file2 = Path.of(config.getDefaultFile1Path());
 
             if (!Files.exists(templateFile)) {
-                Log.error("❌ Template file not found: " + templatePath);
+                Log.error("❌ Template file not found: " + config.getDefaultTemplatePath());
                 System.exit(1);
             }
             if (!Files.exists(file1)) {
-                Log.error("❌ File 1 not found: " + file1Path);
+                Log.error("❌ File 1 not found: " + config.getDefaultFile1Path());
                 System.exit(1);
             }
             if (!Files.exists(file2)) {
-                Log.error("❌ File 2 not found: " + file2Path);
+                Log.error("❌ File 2 not found: " + config.getDefaultFile2Path());
                 System.exit(1);
             }
 
@@ -63,13 +62,13 @@ public class GeminiServices {
                 if (part.inlineData().isPresent()) {
                     var blob = part.inlineData().get();
                     if (blob.data().isPresent()) {
-                        Files.write(Paths.get(output), blob.data().get());
+                        Files.write(Paths.get(config.getDefaultResultFilename()), blob.data().get());
                         break;
                     }
                 }
             }
 
-            Log.info("✨ Image generated: " + output);
+            Log.info("✨ Image generated: " + config.getDefaultResultFilename());
         }
     }
 
@@ -121,4 +120,5 @@ public class GeminiServices {
             Log.info("✨ Video generated: " + output);
         }
     }
+
 }

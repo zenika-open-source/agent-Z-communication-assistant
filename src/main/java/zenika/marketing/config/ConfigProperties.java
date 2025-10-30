@@ -34,6 +34,12 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.video.resolution")
     String defaultVideoResolution;
 
+    @ConfigProperty(name = "app.name")
+    String defaultName;
+
+    @ConfigProperty(name = "app.title")
+    String defaultTitle;
+
     public String getDefaultGeminiModelImage() {
         return defaultGeminiModelImage;
     }
@@ -68,5 +74,66 @@ public class ConfigProperties {
 
     public String getDefaultVideoResolution() {
         return defaultVideoResolution;
+    }
+
+    public String getDefaultName() { return defaultName; }
+
+    public String getDefaultTitle() { return defaultTitle; }
+
+    public void setDefaultGeminiModelImage(String defaultGeminiModelImage) {
+        this.defaultGeminiModelImage = defaultGeminiModelImage;
+    }
+
+    public void setDefaultGeminiVeoModel(String defaultGeminiVeoModel) {
+        this.defaultGeminiVeoModel = defaultGeminiVeoModel;
+    }
+
+    public void setDefaultResultFilename(String defaultResultFilename) {
+        this.defaultResultFilename = defaultResultFilename;
+    }
+
+    public void setDefaultPrompt(String defaultPrompt) {
+        this.defaultPrompt = defaultPrompt;
+    }
+
+    public void setDefaultTemplatePath(String defaultTemplatePath) {
+        this.defaultTemplatePath = defaultTemplatePath;
+    }
+
+    public void setDefaultFile1Path(String defaultFile1Path) {
+        this.defaultFile1Path = defaultFile1Path;
+    }
+
+    public void setDefaultFile2Path(String defaultFile2Path) {
+        this.defaultFile2Path = defaultFile2Path;
+    }
+
+    public void setDefaultVideoRatio(String defaultVideoRatio) {
+        this.defaultVideoRatio = defaultVideoRatio;
+    }
+
+    public void setDefaultVideoResolution(String defaultVideoResolution) {
+        this.defaultVideoResolution = defaultVideoResolution;
+    }
+
+    public void setDefaultName(String defaultName) {
+        this.defaultName = defaultName;
+    }
+
+    public void setDefaultTitle(String defaultTitle) {
+        this.defaultTitle = defaultTitle;
+    }
+
+    public String getFieldByValue(String field, ConfigProperties config) {
+        switch (FIELDS_PROMPT.valueOf(field)) {
+            case NAME:
+                return config.getDefaultName();
+            case TITLE:
+                return config.getDefaultTitle();
+            case TEMPLATE:
+                return config.getDefaultTemplatePath();
+            default:
+                return "";
+        }
     }
 }
