@@ -11,8 +11,16 @@
     "name": "generate-image-speaker-event",
     "description": "Generate an image to announce a speaker for a conference",
     "type": "IMAGE",
-    "template": "",
-    "fields": [],
+    "template": "images/templates/conf-1.png",
+    "fields": ["NAME", "TITLE", "Z_PHOTO"],
+    "prompt": "I would like to create an image from the template image %s integrating these elements: - replace 'Speaker Name' by %s  - replace 'Talk title' by %s. Please center this title and use 2 lines at maximum. - replace the first white square by the logo of the conference (in file1). - replace the second white square by the speaker photo (file2). Please don't modify the name of the author and the title of the talk."
+  },
+  {
+    "name": "generate-image-2-speaker-event",
+    "description": "Generate an image to announce a talk with 2 speaker for a conference",
+    "type": "IMAGE",
+    "template": "images/templates/conf-2.png",
+    "fields": ["NAME", "TITLE", "Z_PHOTO"],
     "prompt": "I would like to create an image from the template image %s integrating these elements: - replace 'Speaker Name' by %s  - replace 'Talk title' by %s. Please center this title and use 2 lines at maximum. - replace the first white square by the logo of the conference (in file1). - replace the second white square by the speaker photo (file2). Please don't modify the name of the author and the title of the talk."
   },
   {
