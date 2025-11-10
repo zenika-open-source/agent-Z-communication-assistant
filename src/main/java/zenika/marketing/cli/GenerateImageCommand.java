@@ -66,10 +66,16 @@ public class GenerateImageCommand implements Runnable {
     String model;
 
     @Option(
-            names = {"--z-photo"},
-            description = "Zenika photo"
+            names = {"--photo1"},
+            description = "First photo"
     )
-    String zPhoto;
+    String photo1;
+
+    @Option(
+            names = {"--photo2"},
+            description = "Second photo"
+    )
+    String photo2;
 
     @Option(
             names = {"--template-name"},
@@ -108,19 +114,24 @@ public class GenerateImageCommand implements Runnable {
         }
     }
 
+    /**
+     * Generate an image for a blog post template.
+     * - 1 title
+     * - 1 writer
+     * - 1 writer photo
+     *
+     * @param template: template configuration
+     */
     private void generateImageBlogPost(Template template) {
         Content content = null;
 
-        Path templateFile = Path.of(config.getDefaultTemplatePath());
-
         String completedPrompt = templateService.preparePrompt(template, config);
 
+        Path templateFile = Path.of(config.getDefaultTemplatePath());
         Path zPhoto = Path.of(config.getDefaultZPhoto());
 
-        if (!Files.exists(templateFile)) {
-            Log.error("❌ Template file not found: " + config.getDefaultTemplatePath());
-            System.exit(1);
-        }
+        checkisFileExist(templateFile);
+        checkisFileExist(zPhoto);
 
         try {
             content = Content.fromParts(
@@ -136,6 +147,13 @@ public class GenerateImageCommand implements Runnable {
         prepareCallGemini(template, content, completedPrompt);
     }
 
+    private void checkisFileExist(Path pathFile) {
+        if (!Files.exists(pathFile)) {
+            Log.error("❌ File not found: " + pathFile);
+            System.exit(1);
+        }
+    }
+
     private void generateImageSpeakerEvent(Template template) {
         Log.infof("-> generateImageBlogPost %s", template.name());
         Content content = null;
@@ -149,15 +167,10 @@ public class GenerateImageCommand implements Runnable {
     }
 
     private void prepareCallGemini(Template template, Content content, String prompt) {
-        config.setDefaultName(name != null ? name : config.getDefaultName());
-        config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
         config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
-        config.setZPhoto(zPhoto != null ? zPhoto : config.getDefaultZPhoto());
-
         String finalModel = model != null ? model : config.getDefaultGeminiModelImage();
 
         Log.infof("-> generateImageBlogPost %s", template.name());
-
         Log.info("\uD83D\uDCDD \uD83D\uDC49 Prompt: \n \t " + prompt + "\n");
 
         try {
