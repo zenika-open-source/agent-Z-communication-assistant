@@ -16,51 +16,10 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 @ApplicationScoped
-public class GeminiServices {
+public class GeminiVideoServices {
 
     @Inject
     ConfigProperties config;
-
-    public void generateImage(String model, String prompt, ConfigProperties config) throws IOException {
-        try (Client client = new Client.Builder()
-                .apiKey(System.getenv("GOOGLE_API_KEY"))
-                .build()) {
-
-            Log.info("✨ Start using Google AI API with model " + model);
-
-            // Validate files exist
-            Path templateFile = Path.of(config.getDefaultTemplatePath());
-            Path zPhoto = Path.of(config.getDefaultZPhoto());
-
-            if (!Files.exists(templateFile)) {
-                Log.error("❌ Template file not found: " + config.getDefaultTemplatePath());
-                System.exit(1);
-            }
-
-            Log.info("🎨 Using template: " + templateFile);
-
-            var response = client.models.generateContent(
-                    model,
-                    Content.fromParts(
-                            Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
-                            Part.fromBytes(Files.readAllBytes(zPhoto), Utils.getMimeType(zPhoto.toString())),
-                            Part.fromText(prompt)
-                    ),
-                    null);
-
-            for (Part part : Objects.requireNonNull(response.parts())) {
-                if (part.inlineData().isPresent()) {
-                    var blob = part.inlineData().get();
-                    if (blob.data().isPresent()) {
-                        Files.write(Paths.get(config.getDefaultResultFilename()), blob.data().get());
-                        break;
-                    }
-                }
-            }
-
-            Log.info("✨ Image generated: " + config.getDefaultResultFilename());
-        }
-    }
 
     public void generateVideo(String model, String prompt, String output, String templatePath,
                               String ratio, String resolution) {
