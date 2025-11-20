@@ -61,7 +61,7 @@ The application now provides a rich CLI with Picocli. For detailed CLI documenta
 mvn quarkus:dev -Dquarkus.args="--help"
 
 # Generate image with custom prompt
-mvn quarkus:dev -Dquarkus.args="--prompt 'Create a vibrant conference banner' -o output.png"
+quarkus dev -Dquarkus.args='image --template-name=generate-image-blog-post --title=DuckDB --name=zMember -o=output.png --photo1=images/people/my-z-member.png'
 
 # Generate video
 mvn quarkus:dev -Dquarkus.args="-t video --prompt 'Conference intro' --vertex"
@@ -89,6 +89,8 @@ mvn clean package
 
 # Run
 java -jar target/quarkus-app/quarkus-run.jar --help
+
+java -jar target/quarkus-app/quarkus-run.jar image --template-name generate-image-speaker-event --title "My great talk" --name "Speaker name" -o output.png --photo1 images/people/speaker-photo.png
 ```
 
 ## Configuration

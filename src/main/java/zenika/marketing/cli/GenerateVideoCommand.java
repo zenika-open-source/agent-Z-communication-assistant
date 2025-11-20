@@ -6,7 +6,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import zenika.marketing.config.ConfigProperties;
 import zenika.marketing.config.MODE_FEATURE;
-import zenika.marketing.services.GeminiServices;
+import zenika.marketing.services.GeminiVideoServices;
 import zenika.marketing.services.TemplateService;
 
 @Command(
@@ -17,7 +17,7 @@ import zenika.marketing.services.TemplateService;
 public class GenerateVideoCommand implements Runnable {
 
     @Inject
-    GeminiServices geminiServices;
+    GeminiVideoServices geminiServices;
 
     @Inject
     ConfigProperties config;
@@ -68,7 +68,7 @@ public class GenerateVideoCommand implements Runnable {
             var template = templateService.waitAValidTemplateByUser(templateName);
 
             // Check that the template is of type VIDEO
-            if (template.type() != MODE_FEATURE.VIDEO) {
+            if (!template.type().equals(MODE_FEATURE.VIDEO)) {
                 Log.error("❌ Error: Template '" + templateName + "' is not a VIDEO template");
                 System.exit(1);
                 return;

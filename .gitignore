@@ -137,3 +137,4 @@ out/
 quarkus.log
 images/
 !images/templates
+/generated/*
