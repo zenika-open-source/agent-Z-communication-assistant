@@ -124,11 +124,14 @@ public class GenerateImageCommand implements Runnable {
      */
     private void generateImageBlogPost(Template template) {
         Content content = null;
+        config.setDefaultName(name != null ? name : config.getDefaultName());
+        config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
+        config.setDefaultPhoto(photo1);
 
         String completedPrompt = templateService.preparePrompt(template, config);
 
         Path templateFile = Path.of(config.getDefaultTemplatePath());
-        Path zPhoto = Path.of(config.getDefaultZPhoto());
+        Path zPhoto = Path.of(config.getDefaultPhoto());
 
         checkisFileExist(templateFile);
         checkisFileExist(zPhoto);
@@ -168,6 +171,8 @@ public class GenerateImageCommand implements Runnable {
 
     private void prepareCallGemini(Template template, Content content, String prompt) {
         config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
+        config.setDefaultResultFilename(String.valueOf(System.currentTimeMillis()).concat("-").concat(config.getDefaultResultFilename()));
+
         String finalModel = model != null ? model : config.getDefaultGeminiModelImage();
 
         Log.infof("-> generateImageBlogPost %s", template.name());

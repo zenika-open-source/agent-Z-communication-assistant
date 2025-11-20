@@ -4,15 +4,15 @@
     "description" : "Generate an image for a blog post",
     "type": "IMAGE",
     "template": "images/templates/blog.png",
-    "fields": ["NAME", "TITLE", "Z_PHOTO"],
-    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Writer Name' by %NAME%  - replace 'Post title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the second white square by the photo from this %Z_PHOTO% file. Please don't modify the name of the author and the title of the blog post."
+    "fields": ["NAME", "TITLE", "PHOTO"],
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Writer Name' by %NAME%  - replace 'Post title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the second white square by the photo from this %PHOTO% file. Please don't modify the name of the author and the title of the blog post."
   },
   {
     "name": "generate-image-speaker-event",
     "description": "Generate an image to announce a speaker for a conference",
     "type": "IMAGE",
     "template": "images/templates/conf-1.png",
-    "fields": ["NAME", "TITLE", "Z_PHOTO"],
+    "fields": ["NAME", "TITLE", "PHOTO"],
     "prompt": "I would like to create an image from the template image %s integrating these elements: - replace 'Speaker Name' by %s  - replace 'Talk title' by %s. Please center this title and use 2 lines at maximum. - replace the first white square by the logo of the conference (in file1). - replace the second white square by the speaker photo (file2). Please don't modify the name of the author and the title of the talk."
   },
   {
@@ -20,7 +20,7 @@
     "description": "Generate an image to announce a talk with 2 speaker for a conference",
     "type": "IMAGE",
     "template": "images/templates/conf-2.png",
-    "fields": ["NAME", "TITLE", "Z_PHOTO"],
+    "fields": ["NAME", "TITLE", "PHOTO", "PHOTO2"],
     "prompt": "I would like to create an image from the template image %s integrating these elements: - replace 'Speaker Name' by %s  - replace 'Talk title' by %s. Please center this title and use 2 lines at maximum. - replace the first white square by the logo of the conference (in file1). - replace the second white square by the speaker photo (file2). Please don't modify the name of the author and the title of the talk."
   },
   {

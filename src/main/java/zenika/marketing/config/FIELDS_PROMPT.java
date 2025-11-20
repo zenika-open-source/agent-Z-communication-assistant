@@ -3,7 +3,8 @@ package zenika.marketing.config;
 public enum FIELDS_PROMPT {
     NAME("NAME"),
     TITLE("TITLE"),
-    Z_PHOTO("Z_PHOTO"),
+    PHOTO("PHOTO"),
+    PHOTO2("PHOTO2"),
     TEMPLATE("TEMPLATE");
 
     private final String value;

@@ -1,0 +1,1 @@
+Please use the .git directory to get the url of this project.

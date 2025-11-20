@@ -61,7 +61,8 @@ The application now provides a rich CLI with Picocli. For detailed CLI documenta
 mvn quarkus:dev -Dquarkus.args="--help"
 
 # Generate image with custom prompt
-quarkus dev -Dquarkus.args='image --template-name=generate-image-blog-post --title=DuckDB --name=zMember -o=outpu.png --z-photo=images/people/my-z-member.png'
+quarkus dev -Dquarkus.args='image --template-name=generate-image-blog-post --title=DuckDB --name=zMember -o=output.png --photo1=images/people/my-z-member.png'
+quarkus dev -Dquarkus.args="image --template-name generate-image-blog-post --title Gemini_CLI --name JeanPhi_Baconnais -o output.png --photo1 images/people/jeanphi-baconnais.png" 
 
 # Generate video
 mvn quarkus:dev -Dquarkus.args="-t video --prompt 'Conference intro' --vertex"
