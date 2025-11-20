@@ -88,6 +88,8 @@ public class GenerateImageCommand implements Runnable {
             "generate-image-blog-post", this::generateImageBlogPost,
             "generate-image-speaker-event", this::generateImageSpeakerEvent,
             "generate-image-2-speaker-event", this::generateImage2SpeakerEvent
+            // generate-video-speaker-event
+            // generate-post-speaker-event
     );
 
     @Override
@@ -158,9 +160,31 @@ public class GenerateImageCommand implements Runnable {
     }
 
     private void generateImageSpeakerEvent(Template template) {
-        Log.infof("-> generateImageBlogPost %s", template.name());
         Content content = null;
-        prepareCallGemini(template, content, "");
+        config.setDefaultName(name != null ? name : config.getDefaultName());
+        config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
+        config.setDefaultPhoto(photo1);
+
+        String completedPrompt = templateService.preparePrompt(template, config);
+
+        Path templateFile = Path.of(config.getDefaultTemplatePath());
+        Path zPhoto = Path.of(config.getDefaultPhoto());
+
+        checkisFileExist(templateFile);
+        checkisFileExist(zPhoto);
+
+        try {
+            content = Content.fromParts(
+                    Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
+                    Part.fromBytes(Files.readAllBytes(zPhoto), Utils.getMimeType(zPhoto.toString())),
+                    Part.fromText(completedPrompt)
+            );
+        } catch (IOException e) {
+            Log.error("❌ Error: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        prepareCallGemini(template, content, completedPrompt);
     }
 
     private void generateImage2SpeakerEvent(Template template) {

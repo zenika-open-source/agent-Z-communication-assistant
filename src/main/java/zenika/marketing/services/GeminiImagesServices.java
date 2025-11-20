@@ -32,7 +32,7 @@ public class GeminiImagesServices {
                 if (part.inlineData().isPresent()) {
                     var blob = part.inlineData().get();
                     if (blob.data().isPresent()) {
-                        Files.write(Paths.get(config.getDefaultResultFilename()), blob.data().get());
+                        Files.write(Paths.get("generated/" + config.getDefaultResultFilename()), blob.data().get());
                         break;
                     }
                 }
