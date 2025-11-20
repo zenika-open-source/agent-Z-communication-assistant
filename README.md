@@ -89,6 +89,8 @@ mvn clean package
 
 # Run
 java -jar target/quarkus-app/quarkus-run.jar --help
+
+java -jar target/quarkus-app/quarkus-run.jar image --template-name generate-image-speaker-event --title "My great talk" --name "Speaker name" -o output.png --photo1 images/people/speaker-photo.png
 ```
 
 ## Configuration
