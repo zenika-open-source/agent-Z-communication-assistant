@@ -89,27 +89,30 @@ The application provides several pre-configured templates for different use case
 
 ```bash
 # Show help
-mvn quarkus:dev -Dquarkus.args="--help"
+quarkus dev -Dquarkus.args="--help"
 
 # Generate image for a blog post (single author)
-mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-blog-post --title 'Introduction to DuckDB' --name 'John Doe' --photo images/people/john-doe.png -o output.png"
+quarkus dev -Dquarkus.args="image --template-name generate-image-blog-post --title=IntroductiontoDuckDB --name=John_Doe --photo=images/people/john-doe.png -o output.png"
 
 # Generate image for a blog post (2 authors)
-mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-2-blog-post --title 'Exploring Firebase Studio' --name 'Alice Smith' --name2 'Bob Johnson' --photo images/people/alice.png --photo2 images/people/bob.png -o output.png"
+quarkus dev -Dquarkus.args="image --template-name generate-image-2-blog-post --title=Exploring_Firebas_Studio --name=Alice-Smith --name2=Bob_Johnson --photo=images/people/alice.png --photo2 images/people/bob.png -o output.png"
 
 # Generate image for a conference speaker
-mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-speaker-event --title 'My Great Talk' --name 'Speaker Name' --photo images/people/speaker.png --conf-photo images/logos/conference.png -o output.png"
+quarkus dev -Dquarkus.args="image --template-name generate-image-speaker-event --title=My_Great_Talk --name=Speaker_Name --photo=images/people/speaker.png --conf-photo=images/logos/conference.png -o output.png"
 
 # Generate image for a conference with 2 speakers
-mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-2-speaker-event --title 'Firebase Studio' --name 'Benjamin Bourgeois' --name2 'Jean-Phi Baconnais' --photo images/people/benjamin-bourgeois.png --photo2 images/people/jeanphi-baconnais.png --conf-photo images/logos/conference.png -o output.png"
+quarkus dev -Dquarkus.args="image --template-name generate-image-2-speaker-event --title=Firebase_Studio --name=Speaker_1 --name2=Speaker_2 --photo images/people/peolple1.png --photo2=images/people/people2.png --conf-photo=images/logos/conference.png -o output.png"
+
+# Generate video
+quarkus dev -Dquarkus.args="video --prompt 'Conference intro' --vertex"
 ```
 
 ### Running the Application
 
-**Development Mode (with hot reload):**
+**With CLI arguments:**
 
 ```bash
-mvn quarkus:dev
+quarkus dev -Dquarkus.args="--type image --prompt 'Your prompt here' --output result.png"
 ```
 
 **Production mode:**
@@ -189,7 +192,7 @@ The application automatically detects and supports the following image formats:
 
 For support and questions:
 
-- Create an issue in the GitLab repository
+- Create an issue in the GitHub repository
 - Check the [Google AI documentation](https://ai.google.dev/docs)
 - Review the [Quarkus guides](https://quarkus.io/guides/)
 

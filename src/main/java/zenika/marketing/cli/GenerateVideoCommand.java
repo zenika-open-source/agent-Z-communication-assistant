@@ -5,94 +5,61 @@ import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import zenika.marketing.config.ConfigProperties;
-import zenika.marketing.config.MODE_FEATURE;
+import zenika.marketing.domain.Template;
 import zenika.marketing.services.GeminiVideoServices;
 import zenika.marketing.services.TemplateService;
 
-@Command(
-        name = "video",
-        mixinStandardHelpOptions = true,
-        description = "Generate a video using Gemini AI."
-)
+@Command(name = "video", mixinStandardHelpOptions = true, description = "Generate a video using Gemini AI.")
 public class GenerateVideoCommand implements Runnable {
 
-    @Inject
-    GeminiVideoServices geminiServices;
+        @Inject
+        GeminiVideoServices geminiServices;
 
-    @Inject
-    ConfigProperties config;
+        @Inject
+        ConfigProperties config;
 
-    @Inject
-    TemplateService templateService;
+        @Inject
+        TemplateService templateService;
 
-    @Option(
-            names = {"-o", "--output"},
-            description = "Output filename (default: ${DEFAULT-VALUE})"
-    )
-    String output;
+        @Option(names = { "-o", "--output" }, description = "Output filename")
+        String output;
 
-    @Option(
-            names = {"--template"},
-            description = "Path to template image"
-    )
-    String templatePath;
+        @Option(names = { "--photo" }, description = "Path to image to use")
+        String photo;
 
-    @Option(
-            names = {"-m", "--model"},
-            description = "Gemini model to use"
-    )
-    String model;
+        @Option(names = { "--template-name" }, description = "Name of the template to use", required = true)
+        String templateName;
 
-    @Option(
-            names = {"--template-name"},
-            description = "Name of the template to use",
-            required = true
-    )
-    String templateName;
+        @Option(names = { "--ratio" }, description = "Video aspect ratio (default: configured default)")
+        String videoRatio;
 
-    @Option(
-            names = {"--ratio"},
-            description = "Video aspect ratio (default: configured default)"
-    )
-    String videoRatio;
+        @Option(names = { "--resolution" }, description = "Video resolution (default: configured default)")
+        String videoResolution;
 
-    @Option(
-            names = {"--resolution"},
-            description = "Video resolution (default: configured default)"
-    )
-    String videoResolution;
+        public void run() {
+                try {
+                        Template template = templateService.waitAValidTemplateByUser(templateName);
+                        config.setDefaultPrompt(template.prompt());
+                        String finalOutput = output != null ? output : config.getDefaultResultFilenameVideo();
+                        config.setDefaultPhoto(photo != null ? photo : config.getDefaultPhoto());
+                        config.setDefaultGeminiVeoModel(config.getDefaultGeminiVeoModel());
+                        config.setDefaultVideoResolution(videoResolution != null ? videoResolution
+                                        : config.getDefaultVideoResolution());
+                        config.setDefaultVideoRatio(videoRatio != null ? videoRatio : config.getDefaultVideoRatio());
+                        config.setDefaultPhoto(photo);
+                        config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
 
-    @Override
-    public void run() {
-        try {
-            var template = templateService.waitAValidTemplateByUser(templateName);
+                        String completedPrompt = templateService.preparePrompt(template, config);
 
-            // Check that the template is of type VIDEO
-            if (!template.type().equals(MODE_FEATURE.VIDEO)) {
-                Log.error("❌ Error: Template '" + templateName + "' is not a VIDEO template");
-                System.exit(1);
-                return;
-            }
+                        Log.infof("-> generate Video %s", template.name());
+                        Log.info("\uD83D\uDCDD \uD83D\uDC49 Prompt: \n \t " + completedPrompt + "\n");
 
-            String templatePrompt = template.prompt();
-            String finalOutput = output != null ? output : config.getDefaultResultFilename();
-            String finalTemplatePath = templatePath != null ? templatePath : config.getDefaultTemplatePath();
-            String finalModel = model != null ? model : config.getDefaultGeminiVeoModel();
-            String finalVideoRatio = videoRatio != null ? videoRatio : config.getDefaultVideoRatio();
-            String finalVideoResolution = videoResolution != null ? videoResolution : config.getDefaultVideoResolution();
+                        geminiServices.generateVideo(finalOutput, config);
+                        System.exit(0);
 
-            geminiServices.generateVideo(
-                    finalModel,
-                    templatePrompt,
-                    finalOutput,
-                    finalTemplatePath,
-                    finalVideoRatio,
-                    finalVideoResolution
-            );
-
-        } catch (Exception e) {
-            Log.error("❌ Error: " + e.getMessage(), e);
-            System.exit(1);
+                } catch (Exception e) {
+                        Log.error("❌ Error: " + e.getMessage(), e);
+                        System.exit(1);
+                }
         }
-    }
 }

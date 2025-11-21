@@ -14,7 +14,7 @@
 # docker run -i --rm -p 8080:8080 -e GOOGLE_AI_API_KEY=your-api-key quarkus/playing-with-google-java-genai
 #
 ###
-FROM registry.access.redhat.com/ubi8/openjdk-17:1.18
+FROM registry.access.redhat.com/ubi8/openjdk-21:1.20
 
 ENV LANGUAGE='en_US:en'
 

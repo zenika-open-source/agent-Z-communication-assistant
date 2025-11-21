@@ -71,12 +71,14 @@
     "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace the yellow square by the conference photo from this %CONF_PHOTO% file - replace the first 'Speaker Name' by %NAME% - replace the white square with this %PHOTO% file - replace the second 'Speaker Name' by %NAME2% - replace the blue square with this %PHOTO2% file - replace the third 'Speaker Name' by %NAME3% - replace the green square with this %PHOTO3% file - replace 'Talk title' by %TITLE%. Please don't modify the names of the speakers and the title of the talk."
   },
   {
-    "name": "generate-video-speaker-event",
+    "name": "generate-video-speaker-event-blog",
     "description": "Generate a video to annunce a speaker for a conference",
     "type": "VIDEO",
     "template": "",
-    "fields": [],
-    "prompt": "I'd like to create a short animation from the template file to move the speaker photo, the title of the talk."
+    "fields": [
+      "PHOTO"
+    ],
+    "prompt": "I'd like to create a short animation with the photo in this file %PHOTO%. - Start with a white page - progressively the speaker photo moves from the top of the page to the center and finish with a short rebound - the title of the talk from the left to the center"
   },
   {
     "name": "generate-post-speaker-event",

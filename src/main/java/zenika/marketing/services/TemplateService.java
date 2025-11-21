@@ -74,14 +74,18 @@ public class TemplateService {
 
     public String preparePrompt(Template temp, ConfigProperties config) {
         var finalPrompt = temp.prompt();
+        var templateRegex = "%".concat(FIELDS_PROMPT.TEMPLATE.getValue()).concat("%");
 
-        finalPrompt = finalPrompt.replaceFirst("%".concat(FIELDS_PROMPT.TEMPLATE.getValue()).concat("%"),
-                temp.template());
+        if (temp.template() != null && finalPrompt.indexOf(templateRegex) != -1) {
+            finalPrompt = finalPrompt.replaceFirst(templateRegex, temp.template());
+        }
 
         if (!temp.fields().isEmpty()) {
             for (String field : temp.fields()) {
-                finalPrompt = finalPrompt.replaceFirst("%".concat(field).concat("%"),
-                        config.getFieldByValue(field, config));
+                if (finalPrompt.indexOf(field) != -1) {
+                    finalPrompt = finalPrompt.replaceFirst("%".concat(field).concat("%"),
+                            config.getFieldByValue(field, config));
+                }
             }
         }
 

@@ -15,6 +15,10 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.result.filename")
     String defaultResultFilename;
 
+    @ConfigProperty(name = "app.result.filename.video")
+    String defaultResultFilenameVideo;
+
+    @ConfigProperty(name = "app.prompt")
     String defaultPrompt;
 
     String defaultTemplatePath;
@@ -113,6 +117,10 @@ public class ConfigProperties {
         return defaultConfPhoto;
     }
 
+    public String getDefaultResultFilenameVideo() {
+        return defaultResultFilenameVideo;
+    }
+
     public void setDefaultPhoto2(String defaultPhoto2) {
         this.defaultPhoto2 = defaultPhoto2;
     }
@@ -183,6 +191,10 @@ public class ConfigProperties {
 
     public void setDefaultConfPhoto(String defaultConfPhoto) {
         this.defaultConfPhoto = defaultConfPhoto;
+    }
+
+    public void setDefaultResultFilenameVideo(String defaultResultFilenameVideo) {
+        this.defaultResultFilenameVideo = defaultResultFilenameVideo;
     }
 
     public String getFieldByValue(String field, ConfigProperties config) {
