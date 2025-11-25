@@ -1,6 +1,12 @@
 # Agent Z communication assistant 🤖
 
-This Quarkus project uses Gemini and google-genai library to generate image from templates. This can allows us to save time for our communication of social network.
+[![Version](https://img.shields.io/badge/version-1.0.0--SNAPSHOT-blue.svg)](https://github.com/zenika-open-source/agent-Z-communication-assistant)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
+[![Quarkus](https://img.shields.io/badge/Quarkus-3.15.1-blue.svg)](https://quarkus.io/)
+[![GitHub](https://img.shields.io/badge/GitHub-zenika--open--source-181717.svg?logo=github)](https://github.com/zenika-open-source/agent-Z-communication-assistant)
+
+This Quarkus project uses Gemini and google-genai library to generate images from templates. This allows us to save time for our social network communication.
 
 > ⚠️ Be careful about the images you use. Please contact the person if you are using their images before using them and integrating them into this API.
 
@@ -8,10 +14,11 @@ This Quarkus project uses Gemini and google-genai library to generate image from
 
 - 🚀 **Quarkus Framework**: Fast startup and low memory footprint
 - 🤖 **Gemini AI Integration**: Uses Google's latest Gemini models
-- 🎨 **Image Generation**: Creates images from templates and prompts
+- 🎨 **Image Generation**: Creates images from pre-configured templates for blog posts and conference speakers
 - 🎥 **Video Generation**: Generate videos with Veo models
 - 💻 **Picocli CLI**: Rich command-line interface with comprehensive options
-- 📝 **Text Generation**: General-purpose text generation capabilities
+- 📝 **Post Generation**: Generate LinkedIn & Bluesky posts
+- 🎯 **Multiple Templates**: Support for single and dual-author/speaker templates
 
 ## 🛠️ Prerequisites
 
@@ -50,9 +57,33 @@ This Quarkus project uses Gemini and google-genai library to generate image from
 
 ## 🚀 Usage
 
-### Command Line Interface (Picocli)
+### Available Templates
 
-The application now provides a rich CLI with Picocli. For detailed CLI documentation, see [CLI.md](CLI.md).
+The application provides several pre-configured templates for different use cases:
+
+#### Image Templates
+
+1. **`generate-image-blog-post`** - Generate an image for a blog post (single author)
+   - Fields: `NAME`, `TITLE`, `PHOTO`
+
+2. **`generate-image-2-blog-post`** - Generate an image for a blog post with 2 authors
+   - Fields: `NAME`, `NAME2`, `TITLE`, `PHOTO`, `PHOTO2`
+
+3. **`generate-image-speaker-event`** - Generate an image to announce a speaker for a conference
+   - Fields: `NAME`, `TITLE`, `CONF_PHOTO`, `PHOTO`
+
+4. **`generate-image-2-speaker-event`** - Generate an image to announce a talk with 2 speakers
+   - Fields: `NAME`, `NAME2`, `TITLE`, `PHOTO`, `PHOTO2`, `CONF_PHOTO`
+
+#### Video Templates
+
+5. **`generate-video-speaker-event`** - Generate a video to announce a speaker for a conference
+
+#### Text Templates
+
+6. **`generate-post-speaker-event`** - Generate LinkedIn & Bluesky posts
+
+### Command Line Interface
 
 **Quick examples:**
 
@@ -60,11 +91,17 @@ The application now provides a rich CLI with Picocli. For detailed CLI documenta
 # Show help
 mvn quarkus:dev -Dquarkus.args="--help"
 
-# Generate image with custom prompt
-quarkus dev -Dquarkus.args='image --template-name=generate-image-blog-post --title=DuckDB --name=zMember -o=output.png --photo1=images/people/my-z-member.png'
+# Generate image for a blog post (single author)
+mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-blog-post --title 'Introduction to DuckDB' --name 'John Doe' --photo images/people/john-doe.png -o output.png"
 
-# Generate video
-mvn quarkus:dev -Dquarkus.args="-t video --prompt 'Conference intro' --vertex"
+# Generate image for a blog post (2 authors)
+mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-2-blog-post --title 'Exploring Firebase Studio' --name 'Alice Smith' --name2 'Bob Johnson' --photo images/people/alice.png --photo2 images/people/bob.png -o output.png"
+
+# Generate image for a conference speaker
+mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-speaker-event --title 'My Great Talk' --name 'Speaker Name' --photo images/people/speaker.png --conf-photo images/logos/conference.png -o output.png"
+
+# Generate image for a conference with 2 speakers
+mvn quarkus:dev -Dquarkus.args="image --template-name generate-image-2-speaker-event --title 'Firebase Studio' --name 'Benjamin Bourgeois' --name2 'Jean-Phi Baconnais' --photo images/people/benjamin-bourgeois.png --photo2 images/people/jeanphi-baconnais.png --conf-photo images/logos/conference.png -o output.png"
 ```
 
 ### Running the Application
@@ -73,12 +110,6 @@ mvn quarkus:dev -Dquarkus.args="-t video --prompt 'Conference intro' --vertex"
 
 ```bash
 mvn quarkus:dev
-```
-
-**With CLI arguments:**
-
-```bash
-mvn quarkus:dev -Dquarkus.args="--type image --prompt 'Your prompt here' --output result.png"
 ```
 
 **Production mode:**
@@ -90,7 +121,8 @@ mvn clean package
 # Run
 java -jar target/quarkus-app/quarkus-run.jar --help
 
-java -jar target/quarkus-app/quarkus-run.jar image --template-name generate-image-speaker-event --title "My great talk" --name "Speaker name" -o output.png --photo1 images/people/speaker-photo.png
+# Example: Generate image for a speaker event
+java -jar target/quarkus-app/quarkus-run.jar image --template-name generate-image-speaker-event --title "My Great Talk" --name "Speaker Name" --photo images/people/speaker-photo.png --conf-photo images/logos/conference.png -o output.png
 ```
 
 ## Configuration
@@ -102,21 +134,11 @@ The application can be configured through `src/main/resources/application.proper
 google.ai.api.key=your-api-key-here
 
 # Gemini Model Settings
-app.gemini.model=gemini-2.5-flash-image-preview
+app.gemini.model=gemini-2.0-flash-exp
+app.gemini.model.veo=veo-2.0
 app.result.filename=gemini-generation-image.png
-app.prompt=Your custom prompt for image generation
 
-# Media Type Configuration
-app.media.type=image
-# Supported values: image, video
-
-# Template and Files Configuration
-app.template.path=images/template.png
-app.file1.path=images/file1.png
-app.file2.path=images/file2.png
-app.template.formats=png,jpg,jpeg
-
-# Video Generation Configuration (for video media type)
+# Video Generation Configuration
 app.video.ratio=16:9
 app.video.resolution=1080p
 
@@ -125,63 +147,28 @@ quarkus.http.port=8080
 quarkus.log.level=INFO
 ```
 
-### Template Configuration Options
+### Key Configuration Options
 
-The application supports two main modes: **Image Generation** and **Video Generation**.
-
-#### Image Generation Mode
-
-- **`app.media.type`**: Set to `image` for image generation (default)
-- **`app.gemini.model`**: Gemini model for image generation (e.g., `gemini-2.5-flash-image`)
-- **`app.template.path`**: Path to the template image file to use
-- **`app.file1.path`**: Path to the first additional image (e.g., conference logo)
-- **`app.file2.path`**: Path to the second additional image (e.g., speaker photo)
-- **`app.template.formats`**: Supported image formats (png, jpg, jpeg, gif, webp)
-
-#### Video Generation Mode
-
-- **`app.media.type`**: Set to `video` for video generation
-- **`app.gemini.model.veo`**: Veo model for video generation (e.g., `veo-3.0-fast-generate-001`)
+- **`google.ai.api.key`**: Your Google AI API key (required)
+- **`app.gemini.model`**: Gemini model for image generation (default: `gemini-2.0-flash-exp`)
+- **`app.gemini.model.veo`**: Veo model for video generation (default: `veo-2.0`)
+- **`app.result.filename`**: Default output filename for generated images
 - **`app.video.ratio`**: Video aspect ratio (e.g., `16:9`, `9:16`, `1:1`)
 - **`app.video.resolution`**: Video resolution (e.g., `1080p`, `720p`, `4k`)
-- **`app.template.path`**: Path to the base image for video generation
 
-### Using Custom Templates
+### Templates
 
-1. **Place your template images in the `images/` directory**
-2. **Configure the template path in `application.properties`:**
+Templates are defined in `src/main/resources/templates.json`. Each template specifies:
+- **name**: Unique identifier for the template
+- **description**: Human-readable description
+- **type**: Template type (`IMAGE`, `VIDEO`, or `POST`)
+- **template**: Path to the template image file
+- **fields**: Required fields for the template
+- **prompt**: AI prompt used to generate the content
 
-   ```properties
-   # For image generation
-   app.media.type=image
-   app.template.path=images/my-custom-template.png
-   app.file1.path=images/logo.png
-   app.file2.path=images/speaker-photo.jpg
+To add a new template, edit `templates.json` and add a corresponding handler in `GenerateImageCommand.java`.
 
-   # For video generation
-   app.media.type=video
-   app.template.path=images/base-image.png
-   app.video.ratio=16:9
-   app.video.resolution=1080p
-   ```
-3. **Or pass it as a command-line parameter:**
-   ```bash
-   # Image generation
-   java -jar target/quarkus-app/quarkus-run.jar \
-     -Dapp.media.type=image \
-     -Dapp.template.path=images/special-template.jpg \
-     -Dapp.file1.path=images/conference-logo.png \
-     -Dapp.file2.path=images/speaker.jpg
-
-   # Video generation
-   java -jar target/quarkus-app/quarkus-run.jar \
-     -Dapp.media.type=video \
-     -Dapp.template.path=images/base.png \
-     -Dapp.video.ratio=9:16 \
-     -Dapp.video.resolution=1080p
-   ```
-
-### Supported Template Formats
+### Supported Image Formats
 
 The application automatically detects and supports the following image formats:
 
@@ -189,15 +176,6 @@ The application automatically detects and supports the following image formats:
 - **JPEG** (`.jpg`, `.jpeg`) - Good for photographic templates
 - **GIF** (`.gif`) - Supports animated templates
 - **WebP** (`.webp`) - Modern format with good compression
-
-### Template Validation
-
-The application includes built-in template validation:
-
-- Checks if the specified template file exists
-- Falls back to the default template if the primary template is missing
-- Provides clear error messages if no valid template is found
-- Logs template usage for debugging
 
 ## 🙌 Contributing
 
