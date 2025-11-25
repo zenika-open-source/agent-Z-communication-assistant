@@ -1,6 +1,5 @@
 package zenika.marketing.config;
 
-
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -16,16 +15,12 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.result.filename")
     String defaultResultFilename;
 
-    @ConfigProperty(name = "app.prompt")
     String defaultPrompt;
 
-    @ConfigProperty(name = "app.template.path")
     String defaultTemplatePath;
 
-    @ConfigProperty(name = "app.file1.path")
     String defaultFile1Path;
 
-    @ConfigProperty(name = "app.file2.path")
     String defaultFile2Path;
 
     @ConfigProperty(name = "app.video.ratio")
@@ -34,17 +29,17 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.video.resolution")
     String defaultVideoResolution;
 
-    @ConfigProperty(name = "app.name")
     String defaultName;
 
-    @ConfigProperty(name = "app.title")
+    String defaultName2;
+
     String defaultTitle;
 
-    @ConfigProperty(name = "app.photo")
     String defaultPhoto;
 
-    @ConfigProperty(name = "app.photo2")
     String defaultPhoto2;
+
+    String defaultConfPhoto;
 
     public String getDefaultGeminiModelImage() {
         return defaultGeminiModelImage;
@@ -82,11 +77,29 @@ public class ConfigProperties {
         return defaultVideoResolution;
     }
 
-    public String getDefaultName() { return defaultName; }
+    public String getDefaultName() {
+        return defaultName;
+    }
 
-    public String getDefaultTitle() { return defaultTitle; }
+    public String getDefaultName2() {
+        return defaultName2;
+    }
 
-    public String getDefaultPhoto() { return defaultPhoto; }
+    public String getDefaultTitle() {
+        return defaultTitle;
+    }
+
+    public String getDefaultPhoto() {
+        return defaultPhoto;
+    }
+
+    public String getDefaultPhoto2() {
+        return defaultPhoto2;
+    }
+
+    public String getDefaultConfPhoto() {
+        return defaultConfPhoto;
+    }
 
     public void setDefaultPhoto2(String defaultPhoto2) {
         this.defaultPhoto2 = defaultPhoto2;
@@ -136,6 +149,10 @@ public class ConfigProperties {
         this.defaultName = defaultName;
     }
 
+    public void setDefaultName2(String defaultName2) {
+        this.defaultName2 = defaultName2;
+    }
+
     public void setDefaultTitle(String defaultTitle) {
         this.defaultTitle = defaultTitle;
     }
@@ -144,17 +161,19 @@ public class ConfigProperties {
         this.defaultPhoto = defaultZPhoto;
     }
 
-    public String getDefaultPhoto2() {
-        return defaultPhoto2;
+    public void setDefaultConfPhoto(String defaultConfPhoto) {
+        this.defaultConfPhoto = defaultConfPhoto;
     }
 
     public String getFieldByValue(String field, ConfigProperties config) {
         return switch (FIELDS_PROMPT.valueOf(field)) {
-            case NAME -> config.getDefaultName();
+            case NAME, NAME1 -> config.getDefaultName();
+            case NAME2 -> config.getDefaultName2();
             case TITLE -> config.getDefaultTitle();
             case TEMPLATE -> config.getDefaultTemplatePath();
-            case PHOTO -> config.getDefaultPhoto();
+            case PHOTO, PHOTO1 -> config.getDefaultPhoto();
             case PHOTO2 -> config.getDefaultPhoto2();
+            case CONF_PHOTO -> config.getDefaultConfPhoto();
             default -> "";
         };
     }

@@ -1,27 +1,57 @@
 [
   {
     "name": "generate-image-blog-post",
-    "description" : "Generate an image for a blog post",
+    "description": "Generate an image for a blog post",
     "type": "IMAGE",
     "template": "images/templates/blog.png",
-    "fields": ["NAME", "TITLE", "PHOTO"],
+    "fields": [
+      "NAME",
+      "TITLE",
+      "PHOTO"
+    ],
     "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Writer Name' by %NAME%  - replace 'Post title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the second white square by the photo from this %PHOTO% file. Please don't modify the name of the author and the title of the blog post."
+  },
+  {
+    "name": "generate-image-2-blog-post",
+    "description": "Generate an image for a blog post with 2 authors",
+    "type": "IMAGE",
+    "template": "images/templates/blog-2.png",
+    "fields": [
+      "NAME",
+      "NAME2",
+      "TITLE",
+      "PHOTO",
+      "PHOTO2"
+    ],
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace the text 'Name' by %NAME% - replace the text 'Name2' by %NAME2% - replace the text 'Post title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the first white square by the first author photo from this %PHOTO% file. - replace the second white square by the second author photo from this %PHOTO2% file - Please don't modify the names of the authors and the title of the blog post and the ratio of the photos."
   },
   {
     "name": "generate-image-speaker-event",
     "description": "Generate an image to announce a speaker for a conference",
     "type": "IMAGE",
     "template": "images/templates/conf-1.png",
-    "fields": ["NAME", "TITLE", "CONF_PHOTO", "PHOTO"],
+    "fields": [
+      "NAME",
+      "TITLE",
+      "CONF_PHOTO",
+      "PHOTO"
+    ],
     "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Speaker name' by %NAME%  - replace 'Talk title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the yellow square by the logo of the conference from the %CONF_PHOTO% file. - replace the white square by the speaker photo from this %PHOTO% file. Please don't modify the name of the author and the title of the talk."
   },
   {
     "name": "generate-image-2-speaker-event",
-    "description": "Generate an image to announce a talk with 2 speaker for a conference",
+    "description": "Generate an image to announce a talk with 2 speakers for a conference",
     "type": "IMAGE",
-    "template": "images/templates/conf-2.png",
-    "fields": ["NAME", "TITLE", "PHOTO", "PHOTO2"],
-    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace 'Speaker Name' by %NAME%  - replace 'Talk title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the first white square by the logo of the conference (in file1). - replace the second white square by the speaker photo from this %PHOTO% file. Please don't modify the name of the author and the title of the talk."
+    "template": "images/templates/conf-1-binome.png",
+    "fields": [
+      "NAME",
+      "NAME2",
+      "TITLE",
+      "PHOTO",
+      "PHOTO2",
+      "CONF_PHOTO"
+    ],
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace the first 'Speaker Name' by %NAME% - replace the second 'Speaker Name' by %NAME2% - replace 'Talk title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the first white square by the conference photo from this %CONF_PHOTO% file. - replace the first white square by the first speaker photo from this %PHOTO% file. - replace the second white square by the second speaker photo from this %PHOTO2% file. Please don't modify the names of the speakers and the title of the talk."
   },
   {
     "name": "generate-video-speaker-event",

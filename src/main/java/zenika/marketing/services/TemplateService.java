@@ -26,9 +26,11 @@ public class TemplateService {
             if (is == null) {
                 throw new IllegalStateException("Cannot find templates.json in classpath");
             }
-            loadedTemplates = objectMapper.readValue(is, new TypeReference<>() {});
+            loadedTemplates = objectMapper.readValue(is, new TypeReference<>() {
+            });
 
-            Log.info(String.format("\uD83D\uDC77 ✅ Templates file read ... %s templates available", loadedTemplates.size()));
+            Log.info(String.format("\uD83D\uDC77 ✅ Templates file read ... %s templates available",
+                    loadedTemplates.size()));
         } catch (Exception e) {
             Log.error("\\uD83D\uDC77 ❌ Failed to load or parse templates file ... ", e);
             loadedTemplates = Collections.emptyList();
@@ -52,15 +54,15 @@ public class TemplateService {
 
         while (!selectedTemplate.isPresent()) {
             Log.info("\uD83D\uDC40 Please choose a template from the list below:");
-            this.getTemplates().forEach(t ->
-                    Log.info(String.format("  - %s: %s", t.name(), t.description()))
-            );
+            this.getTemplates().forEach(t -> Log.info(String.format("  - %s: %s", t.name(), t.description())));
             System.out.print("\uD83D\uDCDD Enter template name: ");
             String inputName = System.console().readLine();
             selectedTemplate = this.findByName(inputName);
 
             if (selectedTemplate.isEmpty()) {
-                Log.info(String.format("❌ Template '%s' not found. Please use the 'list' command to see available templates.", inputName));
+                Log.info(String.format(
+                        "❌ Template '%s' not found. Please use the 'list' command to see available templates.",
+                        inputName));
             }
         }
 
@@ -73,12 +75,13 @@ public class TemplateService {
     public String preparePrompt(Template temp, ConfigProperties config) {
         var finalPrompt = temp.prompt();
 
-        // Template (outside fields)
-        finalPrompt = finalPrompt.replaceFirst("%".concat(FIELDS_PROMPT.TEMPLATE.getValue()).concat("%"), temp.template());
+        finalPrompt = finalPrompt.replaceFirst("%".concat(FIELDS_PROMPT.TEMPLATE.getValue()).concat("%"),
+                temp.template());
 
         if (!temp.fields().isEmpty()) {
             for (String field : temp.fields()) {
-                finalPrompt = finalPrompt.replaceFirst("%".concat(field).concat("%"), config.getFieldByValue(field, config));
+                finalPrompt = finalPrompt.replaceFirst("%".concat(field).concat("%"),
+                        config.getFieldByValue(field, config));
             }
         }
 

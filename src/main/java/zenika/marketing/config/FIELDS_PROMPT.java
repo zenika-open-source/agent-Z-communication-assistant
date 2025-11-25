@@ -2,12 +2,14 @@ package zenika.marketing.config;
 
 public enum FIELDS_PROMPT {
     NAME("NAME"),
+    NAME1("NAME1"),
+    NAME2("NAME2"),
     TITLE("TITLE"),
     PHOTO("PHOTO"),
+    PHOTO1("PHOTO1"),
     PHOTO2("PHOTO2"),
     TEMPLATE("TEMPLATE"),
-    CONF_PHOTO("CONF_PHOTO")
-    ;
+    CONF_PHOTO("CONF_PHOTO");
 
     private final String value;
 
