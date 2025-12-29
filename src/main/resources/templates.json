@@ -54,6 +54,23 @@
     "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace the first 'Speaker Name' by %NAME% - replace the second 'Speaker Name' by %NAME2% - replace 'Talk title' by %TITLE%. Please center this title and use 2 lines at maximum. - replace the first white square by the conference photo from this %CONF_PHOTO% file. - replace the first white square by the first speaker photo from this %PHOTO% file. - replace the second white square by the second speaker photo from this %PHOTO2% file. Please don't modify the names of the speakers and the title of the talk."
   },
   {
+    "name": "generate-image-3-speaker-event",
+    "description": "Generate an image to announce a talk with 3 speakers for a conference",
+    "type": "IMAGE",
+    "template": "images/templates/conf-1-trinome.png",
+    "fields": [
+      "NAME",
+      "NAME2",
+      "NAME3",
+      "TITLE",
+      "PHOTO",
+      "PHOTO2",
+      "PHOTO3",
+      "CONF_PHOTO"
+    ],
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace the yellow square by the conference photo from this %CONF_PHOTO% file - replace the first 'Speaker Name' by %NAME% - replace the white square with this %PHOTO% file - replace the second 'Speaker Name' by %NAME2% - replace the blue square with this %PHOTO2% file - replace the third 'Speaker Name' by %NAME3% - replace the green square with this %PHOTO3% file - replace 'Talk title' by %TITLE%. Please don't modify the names of the speakers and the title of the talk."
+  },
+  {
     "name": "generate-video-speaker-event",
     "description": "Generate a video to annunce a speaker for a conference",
     "type": "VIDEO",

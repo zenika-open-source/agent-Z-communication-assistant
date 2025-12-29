@@ -43,6 +43,9 @@ public class GenerateImageCommand implements Runnable {
     @Option(names = { "--name2" }, description = "Speaker or writer Name")
     String name2;
 
+    @Option(names = { "--name3" }, description = "Speaker or writer Name")
+    String name3;
+
     @Option(names = { "--title" }, description = "Blog post or talk title")
     String title;
 
@@ -55,6 +58,9 @@ public class GenerateImageCommand implements Runnable {
     @Option(names = { "--photo2" }, description = "Second photo")
     String photo2;
 
+    @Option(names = { "--photo3" }, description = "Third photo")
+    String photo3;
+
     @Option(names = { "--conf-photo" }, description = "Conference logo")
     String confPhoto;
 
@@ -65,7 +71,8 @@ public class GenerateImageCommand implements Runnable {
             "generate-image-blog-post", this::generateImageBlogPost,
             "generate-image-2-blog-post", this::generateImage2BlogPost,
             "generate-image-speaker-event", this::generateImageSpeakerEvent,
-            "generate-image-2-speaker-event", this::generateImage2SpeakerEvent
+            "generate-image-2-speaker-event", this::generateImage2SpeakerEvent,
+            "generate-image-3-speaker-event", this::generateImage3SpeakerEvent
     // generate-post-speaker-event
     );
 
@@ -174,19 +181,23 @@ public class GenerateImageCommand implements Runnable {
         config.setDefaultName(name != null ? name : config.getDefaultName());
         config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
         config.setDefaultPhoto(photo);
+        config.setDefaultConfPhoto(confPhoto);
 
         String completedPrompt = templateService.preparePrompt(template, config);
 
         Path templateFile = Path.of(template.template());
         Path zPhoto = Path.of(config.getDefaultPhoto());
+        Path confPhotoPath = Path.of(config.getDefaultConfPhoto());
 
         checkisFileExist(templateFile);
         checkisFileExist(zPhoto);
+        checkisFileExist(confPhotoPath);
 
         try {
             content = Content.fromParts(
                     Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
                     Part.fromBytes(Files.readAllBytes(zPhoto), Utils.getMimeType(zPhoto.toString())),
+                    Part.fromBytes(Files.readAllBytes(confPhotoPath), Utils.getMimeType(confPhotoPath.toString())),
                     Part.fromText(completedPrompt));
         } catch (IOException e) {
             Log.error("❌ Error: " + e.getMessage(), e);
@@ -222,6 +233,47 @@ public class GenerateImageCommand implements Runnable {
                     Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
                     Part.fromBytes(Files.readAllBytes(zPhoto), Utils.getMimeType(zPhoto.toString())),
                     Part.fromBytes(Files.readAllBytes(zPhoto2), Utils.getMimeType(zPhoto2.toString())),
+                    Part.fromBytes(Files.readAllBytes(confPhoto), Utils.getMimeType(confPhoto.toString())),
+                    Part.fromText(completedPrompt));
+        } catch (IOException e) {
+            Log.error("❌ Error: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        prepareCallGemini(template, content, completedPrompt);
+    }
+
+    private void generateImage3SpeakerEvent(Template template) {
+        Content content = null;
+        config.setDefaultName(name != null ? name : config.getDefaultName());
+        config.setDefaultName2(name2 != null ? name2 : config.getDefaultName2());
+        config.setDefaultName3(name3 != null ? name3 : config.getDefaultName3());
+        config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
+        config.setDefaultPhoto(photo);
+        config.setDefaultPhoto2(photo2);
+        config.setDefaultPhoto3(photo3);
+        config.setDefaultConfPhoto(confPhoto);
+
+        String completedPrompt = templateService.preparePrompt(template, config);
+
+        Path templateFile = Path.of(template.template());
+        Path zPhoto = Path.of(config.getDefaultPhoto());
+        Path zPhoto2 = Path.of(config.getDefaultPhoto2());
+        Path zPhoto3 = Path.of(config.getDefaultPhoto3());
+        Path confPhoto = Path.of(config.getDefaultConfPhoto());
+
+        checkisFileExist(templateFile);
+        checkisFileExist(zPhoto);
+        checkisFileExist(zPhoto2);
+        checkisFileExist(zPhoto3);
+        checkisFileExist(confPhoto);
+
+        try {
+            content = Content.fromParts(
+                    Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
+                    Part.fromBytes(Files.readAllBytes(zPhoto), Utils.getMimeType(zPhoto.toString())),
+                    Part.fromBytes(Files.readAllBytes(zPhoto2), Utils.getMimeType(zPhoto2.toString())),
+                    Part.fromBytes(Files.readAllBytes(zPhoto3), Utils.getMimeType(zPhoto3.toString())),
                     Part.fromBytes(Files.readAllBytes(confPhoto), Utils.getMimeType(confPhoto.toString())),
                     Part.fromText(completedPrompt));
         } catch (IOException e) {

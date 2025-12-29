@@ -33,11 +33,15 @@ public class ConfigProperties {
 
     String defaultName2;
 
+    String defaultName3;
+
     String defaultTitle;
 
     String defaultPhoto;
 
     String defaultPhoto2;
+
+    String defaultPhoto3;
 
     String defaultConfPhoto;
 
@@ -85,6 +89,10 @@ public class ConfigProperties {
         return defaultName2;
     }
 
+    public String getDefaultName3() {
+        return defaultName3;
+    }
+
     public String getDefaultTitle() {
         return defaultTitle;
     }
@@ -97,12 +105,20 @@ public class ConfigProperties {
         return defaultPhoto2;
     }
 
+    public String getDefaultPhoto3() {
+        return defaultPhoto3;
+    }
+
     public String getDefaultConfPhoto() {
         return defaultConfPhoto;
     }
 
     public void setDefaultPhoto2(String defaultPhoto2) {
         this.defaultPhoto2 = defaultPhoto2;
+    }
+
+    public void setDefaultPhoto3(String defaultPhoto3) {
+        this.defaultPhoto3 = defaultPhoto3;
     }
 
     public void setDefaultPhoto(String defaultPhoto) {
@@ -153,6 +169,10 @@ public class ConfigProperties {
         this.defaultName2 = defaultName2;
     }
 
+    public void setDefaultName3(String defaultName3) {
+        this.defaultName3 = defaultName3;
+    }
+
     public void setDefaultTitle(String defaultTitle) {
         this.defaultTitle = defaultTitle;
     }
@@ -169,10 +189,12 @@ public class ConfigProperties {
         return switch (FIELDS_PROMPT.valueOf(field)) {
             case NAME, NAME1 -> config.getDefaultName();
             case NAME2 -> config.getDefaultName2();
+            case NAME3 -> config.getDefaultName3();
             case TITLE -> config.getDefaultTitle();
             case TEMPLATE -> config.getDefaultTemplatePath();
             case PHOTO, PHOTO1 -> config.getDefaultPhoto();
             case PHOTO2 -> config.getDefaultPhoto2();
+            case PHOTO3 -> config.getDefaultPhoto3();
             case CONF_PHOTO -> config.getDefaultConfPhoto();
             default -> "";
         };
