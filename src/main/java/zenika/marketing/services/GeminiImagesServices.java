@@ -7,6 +7,7 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import zenika.marketing.config.ConfigProperties;
+import com.google.genai.types.Candidate;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,6 +29,15 @@ public class GeminiImagesServices {
 
             var response = client.models.generateContent(model, content, null);
 
+            if (response.candidates() != null && !response.candidates().isEmpty()) {
+                Candidate candidate = response.candidates().get().getFirst();
+                // 2. Check the Finish Reason
+                // If it is NOT "STOP", the model blocked the generation
+                if (!"STOP".equals(candidate.finishReason().get().toString())) {
+                    System.out.println("❌ Generation stopped. Reason: " + candidate.finishReason().toString());
+                }
+            }
+
             for (Part part : Objects.requireNonNull(response.parts())) {
                 if (part.inlineData().isPresent()) {
                     var blob = part.inlineData().get();
@@ -38,6 +48,7 @@ public class GeminiImagesServices {
                 }
             }
             Log.info("✨ Image generated: " + config.getDefaultResultFilename());
+
         }
     }
 }
