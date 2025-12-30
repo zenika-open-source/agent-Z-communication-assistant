@@ -78,7 +78,7 @@
     "fields": [
       "PHOTO"
     ],
-    "prompt": "I'd like to create a short animation with the photo in this file %PHOTO%. - Start with a white page - progressively the speaker photo moves from the top of the page to the center and finish with a short rebound - the title of the talk from the left to the center"
+    "prompt": " I'd like to create a short animation with the photo in this file %PHOTO%. Start from a blank white canvas. Elements appear progressively: the blog post title, the author's name, and the author's profile picture slide in smoothly from outside the frame to their final designated positions on the layout, creating a clean and professional motion graphic reveal."
   },
   {
     "name": "generate-post-speaker-event",

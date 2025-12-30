@@ -47,7 +47,9 @@ public class GenerateVideoCommand implements Runnable {
                                         : config.getDefaultVideoResolution());
                         config.setDefaultVideoRatio(videoRatio != null ? videoRatio : config.getDefaultVideoRatio());
                         config.setDefaultPhoto(photo);
-                        config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
+                        config.setDefaultResultFilename(
+                                        String.valueOf(System.currentTimeMillis()).concat("-")
+                                                        .concat(config.getDefaultResultFilename()));
 
                         String completedPrompt = templateService.preparePrompt(template, config);
 
