@@ -11,7 +11,8 @@ public enum FIELDS_PROMPT {
     PHOTO2("PHOTO2"),
     PHOTO3("PHOTO3"),
     TEMPLATE("TEMPLATE"),
-    CONF_PHOTO("CONF_PHOTO");
+    CONF_PHOTO("CONF_PHOTO"),
+    PROMPT("PROMPT");
 
     private final String value;
 

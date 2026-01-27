@@ -208,6 +208,7 @@ public class ConfigProperties {
             case PHOTO2 -> config.getDefaultPhoto2();
             case PHOTO3 -> config.getDefaultPhoto3();
             case CONF_PHOTO -> config.getDefaultConfPhoto();
+            case PROMPT -> config.getDefaultPrompt();
             default -> "";
         };
     }

@@ -64,6 +64,9 @@ public class GenerateImageCommand implements Runnable {
     @Option(names = { "--conf-photo" }, description = "Conference logo")
     String confPhoto;
 
+    @Option(names = { "--prompt" }, description = "Prompt to generate image")
+    String prompt;
+
     @Option(names = { "--template-name" }, description = "Name of the template to use", required = true)
     String templateName;
 
@@ -72,7 +75,9 @@ public class GenerateImageCommand implements Runnable {
             "generate-image-2-blog-post", this::generateImage2BlogPost,
             "generate-image-speaker-event", this::generateImageSpeakerEvent,
             "generate-image-2-speaker-event", this::generateImage2SpeakerEvent,
-            "generate-image-3-speaker-event", this::generateImage3SpeakerEvent
+            "generate-image-3-speaker-event", this::generateImage3SpeakerEvent,
+            "generate-image-from-prompt", this::generateImageFromPrompt,
+            "generate-image-duck-from-prompt", this::generateImageDuckFromPrompt
     // generate-post-speaker-event
     );
 
@@ -277,6 +282,39 @@ public class GenerateImageCommand implements Runnable {
                     Part.fromBytes(Files.readAllBytes(confPhoto), Utils.getMimeType(confPhoto.toString())),
                     Part.fromText(completedPrompt));
         } catch (IOException e) {
+            Log.error("❌ Error: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        prepareCallGemini(template, content, completedPrompt);
+    }
+
+    private void generateImageFromPrompt(Template template) {
+        Content content = null;
+        config.setDefaultPrompt(prompt != null ? prompt : config.getDefaultPrompt());
+
+        String completedPrompt = templateService.preparePrompt(template, config);
+
+        try {
+            content = Content.fromParts(
+                    Part.fromText(completedPrompt));
+        } catch (Exception e) {
+            Log.error("❌ Error: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        prepareCallGemini(template, content, completedPrompt);
+    }
+
+    private void generateImageDuckFromPrompt(Template template) {
+        Content content = null;
+        config.setDefaultPrompt(prompt != null ? prompt : config.getDefaultPrompt());
+
+        String completedPrompt = templateService.preparePrompt(template, config);
+
+        try {
+            content = Content.fromParts(Part.fromText(completedPrompt));
+        } catch (Exception e) {
             Log.error("❌ Error: " + e.getMessage(), e);
             System.exit(1);
         }
