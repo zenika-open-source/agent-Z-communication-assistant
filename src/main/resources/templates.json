@@ -87,5 +87,25 @@
     "template": "",
     "fields": [],
     "prompt": "I'd like to create two post to announce %s as a speaker for the conference %s in %s. The first one is for Linkedin, the second for Bluesky."
+  },
+  {
+    "name": "generate-image-from-prompt",
+    "description": "Generate an image from a prompt",
+    "type": "IMAGE",
+    "template": "",
+    "fields": [
+      "PROMPT"
+    ],
+    "prompt": "%PROMPT%"
+  },
+  {
+    "name": "generate-image-duck-from-prompt",
+    "description": "Generate an image from a prompt and put the Zenika duck on",
+    "type": "IMAGE",
+    "template": "",
+    "fields": [
+      "PROMPT"
+    ],
+    "prompt": "I would like to create an image based on this prompt: %PROMPT%. Add the Zenika red duck on the image, smiling and very happy."
   }
 ]

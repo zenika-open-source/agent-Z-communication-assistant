@@ -75,6 +75,12 @@ The application provides several pre-configured templates for different use case
 4. **`generate-image-2-speaker-event`** - Generate an image to announce a talk with 2 speakers
    - Fields: `NAME`, `NAME2`, `TITLE`, `PHOTO`, `PHOTO2`, `CONF_PHOTO`
 
+5. **`generate-image-from-prompt`** - Generate an image from a prompt
+   - Fields: `PROMPT`
+
+6. **`generate-image-duck-from-prompt`** - Generate an image from a prompt with the Zenika duck
+   - Fields: `PROMPT`
+
 #### Video Templates
 
 5. **`generate-video-speaker-event`** - Generate a video to announce a speaker for a conference
@@ -102,6 +108,9 @@ quarkus dev -Dquarkus.args="image --template-name generate-image-speaker-event -
 
 # Generate image for a conference with 2 speakers
 quarkus dev -Dquarkus.args="image --template-name generate-image-2-speaker-event --title=Firebase_Studio --name=Speaker_1 --name2=Speaker_2 --photo images/people/peolple1.png --photo2=images/people/people2.png --conf-photo=images/logos/conference.png -o output.png"
+
+# Generate image from a prompt
+quarkus dev -Dquarkus.args="image --template-name generate-image-from-prompt --prompt='A futuristic city with flying cars' -o output.png"
 
 # Generate video
 quarkus dev -Dquarkus.args="video --prompt 'Conference intro' --vertex"
