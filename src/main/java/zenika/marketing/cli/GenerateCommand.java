@@ -2,16 +2,11 @@ package zenika.marketing.cli;
 
 import picocli.CommandLine.Command;
 
-@Command(
-        name = "generate",
-        mixinStandardHelpOptions = true,
-        version = "1.0.0",
-        description = "Generate images or videos using Gemini AI.",
-        subcommands = {
-                GenerateImageCommand.class,
-                GenerateVideoCommand.class
-        }
-)
+@Command(name = "generate", mixinStandardHelpOptions = true, version = "1.0.0", description = "Generate images or videos using Gemini AI.", subcommands = {
+        GenerateImageCommand.class,
+        GenerateVideoCommand.class,
+        GenerateUICommand.class
+})
 public class GenerateCommand implements Runnable {
 
     @Override
