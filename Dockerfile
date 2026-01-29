@@ -1,32 +1,17 @@
-####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
-#
-# Before building the container image run:
-#
-# ./mvnw package
-#
-# Then, build the image with:
-#
-# docker build -f Dockerfile -t quarkus/playing-with-google-java-genai .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 -e GOOGLE_AI_API_KEY=your-api-key quarkus/playing-with-google-java-genai
-#
-###
-FROM registry.access.redhat.com/ubi8/openjdk-21:1.20
+FROM eclipse-temurin:21-jre
 
-ENV LANGUAGE='en_US:en'
+WORKDIR /deployments
 
-# We make four distinct layers so if there are application changes the library layers can be re-used
-COPY --chown=185 target/quarkus-app/lib/ /deployments/lib/
-COPY --chown=185 target/quarkus-app/*.jar /deployments/
-COPY --chown=185 target/quarkus-app/app/ /deployments/app/
-COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
+COPY target/quarkus-app/lib/ /deployments/lib/
+COPY target/quarkus-app/*.jar /deployments/
+COPY target/quarkus-app/app/ /deployments/app/
+COPY target/quarkus-app/quarkus/ /deployments/quarkus/
 
 EXPOSE 8080
-USER 185
-ENV JAVA_OPTS_APPEND="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"
+EXPOSE 8501
 
-ENTRYPOINT [ "/opt/jboss/container/java/run/run-java.sh" ]
+# Create directories for generated content and uploads
+RUN mkdir -p /deployments/generated /deployments/images/uploads
+
+ENTRYPOINT ["java", "-Dquarkus.http.host=0.0.0.0", "-Djava.util.logging.manager=org.jboss.logmanager.LogManager", "-jar", "/deployments/quarkus-run.jar"]
+CMD ["ui"]

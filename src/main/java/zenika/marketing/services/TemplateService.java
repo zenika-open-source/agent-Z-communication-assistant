@@ -19,21 +19,19 @@ public class TemplateService {
     private final List<Template> templates;
 
     public TemplateService() {
-        Log.info("\uD83D\uDC77 Read and parse templates file ...");
-        List<Template> loadedTemplates;
+        Log.info("👷 Loading templates from templates.json ...");
+        List<Template> loadedTemplates = Collections.emptyList();
         ObjectMapper objectMapper = new ObjectMapper();
-        try (InputStream is = getClass().getResourceAsStream("/templates.json")) {
+        try (InputStream is = TemplateService.class.getResourceAsStream("/templates.json")) {
             if (is == null) {
-                throw new IllegalStateException("Cannot find templates.json in classpath");
+                Log.error("❌ Cannot find templates.json in classpath");
+            } else {
+                loadedTemplates = objectMapper.readValue(is, new TypeReference<>() {
+                });
+                Log.infof("✅ Loaded %d templates", loadedTemplates.size());
             }
-            loadedTemplates = objectMapper.readValue(is, new TypeReference<>() {
-            });
-
-            Log.info(String.format("\uD83D\uDC77 ✅ Templates file read ... %s templates available",
-                    loadedTemplates.size()));
         } catch (Exception e) {
-            Log.error("\\uD83D\uDC77 ❌ Failed to load or parse templates file ... ", e);
-            loadedTemplates = Collections.emptyList();
+            Log.error("❌ Failed to load or parse templates.json", e);
         }
         this.templates = loadedTemplates;
     }
@@ -82,9 +80,9 @@ public class TemplateService {
 
         if (!temp.fields().isEmpty()) {
             for (String field : temp.fields()) {
-                if (finalPrompt.indexOf(field) != -1) {
-                    finalPrompt = finalPrompt.replaceFirst("%".concat(field).concat("%"),
-                            config.getFieldByValue(field, config));
+                if (finalPrompt.contains("%" + field + "%")) {
+                    String value = config.getFieldByValue(field, config);
+                    finalPrompt = finalPrompt.replace("%" + field + "%", value != null ? value : "");
                 }
             }
         }

@@ -55,9 +55,46 @@ This Quarkus project uses Gemini and google-genai library to generate images fro
    mvn clean compile
    ```
 
+## 🐳 Docker
+
+You can also run the application using Docker:
+
+1. **Build the container image:**
+
+   ```bash
+   ./mvnw package
+   docker build -f Dockerfile -t quarkus/agent-z-communication .
+   ```
+
+2. **Run the container:**
+
+   The container exposes port `8080` (Quarkus) and `8501` (Javelit UI). It also needs your Google API credentials.
+
+   ```bash
+   docker run -i --rm \
+     -p 8080:8080 \
+     -p 8501:8501 \
+     -e GOOGLE_API_KEY=$GOOGLE_API_KEY \
+     -e GOOGLE_CLOUD_PROJECT_ID=$GOOGLE_CLOUD_PROJECT_ID \
+     -e GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION \
+     -v $(pwd)/generated:/deployments/generated \
+     quarkus/agent-z-communication
+   ```
+
+   The web interface will be available at [http://localhost:8501](http://localhost:8501).
+
 ## 🚀 Usage
 
-### Available Templates
+### Web Interface (UI)
+
+The easiest way to use the assistant is via the web interface:
+
+1. Start the application
+2. Open [http://localhost:8501](http://localhost:8501) in your browser
+3. Select a template and fill in the fields
+4. Click **GENERATE** !
+
+### Command Line Interface
 
 The application provides several pre-configured templates for different use cases:
 
