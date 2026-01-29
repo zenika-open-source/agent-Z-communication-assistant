@@ -1,11 +1,12 @@
 package zenika.marketing.cli;
 
 import picocli.CommandLine.Command;
+import zenika.marketing.ui.AgentZCommunication;
 
 @Command(name = "generate", mixinStandardHelpOptions = true, version = "1.0.0", description = "Generate images or videos using Gemini AI.", subcommands = {
         GenerateImageCommand.class,
         GenerateVideoCommand.class,
-        GenerateUICommand.class
+        AgentZCommunication.class
 })
 public class GenerateCommand implements Runnable {
 

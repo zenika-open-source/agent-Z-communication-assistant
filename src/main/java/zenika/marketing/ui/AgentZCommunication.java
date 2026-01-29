@@ -1,4 +1,4 @@
-package zenika.marketing.cli;
+package zenika.marketing.ui;
 
 import io.javelit.core.Jt;
 import io.javelit.core.JtUploadedFile;
@@ -8,6 +8,8 @@ import jakarta.inject.Inject;
 import picocli.CommandLine.Command;
 import zenika.marketing.services.TemplateService;
 import zenika.marketing.services.GeminiImagesServices;
+import zenika.marketing.services.GeminiVideoServices;
+import zenika.marketing.services.GeminiTextServices;
 import zenika.marketing.services.HistoryService;
 import zenika.marketing.config.ConfigProperties;
 import zenika.marketing.domain.Template;
@@ -32,13 +34,19 @@ import java.util.Map;
 @RegisterForReflection
 @Dependent
 @Command(name = "ui", mixinStandardHelpOptions = true, description = "Start Javelit UI.")
-public class GenerateUICommand implements Runnable {
+public class AgentZCommunication implements Runnable {
 
     @Inject
     TemplateService templateService;
 
     @Inject
     GeminiImagesServices geminiImagesServices;
+
+    @Inject
+    GeminiVideoServices geminiVideoServices;
+
+    @Inject
+    GeminiTextServices geminiTextServices;
 
     @Inject
     HistoryService historyService;
@@ -69,33 +77,17 @@ public class GenerateUICommand implements Runnable {
     }
 
     public void renderApp() {
-        Jt.divider().use(Jt.SIDEBAR);
-
-        if (Jt.button("🎨 Générateur").useContainerWidth(true).use(Jt.SIDEBAR)) {
-            Jt.sessionState().put("currentPage", "gen");
-        }
-        if (Jt.button("📜 Historique").useContainerWidth(true).use(Jt.SIDEBAR)) {
-            Jt.sessionState().put("currentPage", "hist");
-        }
-
-        String page = (String) Jt.sessionState().getOrDefault("currentPage", "gen");
-
-        if ("hist".equals(page)) {
-            renderHistory();
-        } else {
-            renderGenerator();
-        }
+        var nav = Jt.navigation(
+                Jt.page("gen", this::renderGenerator).title("🎨 Générateur").icon("🔥"),
+                Jt.page("hist", this::renderHistory).title("📜 Historique").icon(":favorite:"))
+                .use();
+        nav.run();
     }
 
     public void renderGenerator() {
         Jt.title("🤖 Agent Z Communication Assistant").use();
         List<Template> templates = templateService.getTemplates();
         List<String> templateNames = templates.stream().map(Template::name).toList();
-
-        if (templates.isEmpty()) {
-            Jt.warning("Aucun template trouvé. Vérifiez le fichier templates.json.").use();
-            return;
-        }
 
         String defaultTemplateName = config.getDefaultTemplatePath();
         int defaultIndex = 0;
@@ -108,7 +100,7 @@ public class GenerateUICommand implements Runnable {
             }
         }
 
-        String selectedName = Jt.selectbox("Template", templateNames).index(defaultIndex).use();
+        String selectedName = Jt.selectbox("", templateNames).index(defaultIndex).use();
 
         if (selectedName == null || selectedName.isEmpty()) {
             Jt.info("Sélectionnez un template.").use();
@@ -121,16 +113,58 @@ public class GenerateUICommand implements Runnable {
             return;
         }
 
-        var headerCols = Jt.columns(2).use();
+        var headerCols = Jt.columns(2).key("gen-header-cols").use();
         var colHeader = headerCols.col(0);
         var colButton = headerCols.col(1);
 
         Jt.header("🎨 " + selectedTemplate.name()).use(colHeader);
         Jt.markdown("*" + selectedTemplate.description() + "*").use(colHeader);
         boolean generateClicked = Jt.button("🚀 GÉNÉRER").use(colButton);
-        Jt.markdown("---").use();
 
-        var cols = Jt.columns(3).use();
+        Map<String, String> fieldValues = new HashMap<>();
+        if (generateClicked) {
+            Jt.info("⏳ Génération...").use();
+            try {
+                String prompt = templateService.preparePrompt(selectedTemplate, config);
+                Content content = prepareContent(selectedTemplate, prompt);
+
+                String model = config.getDefaultGeminiModelImage();
+
+                if ("VIDEO".equals(selectedTemplate.type())) {
+                    model = config.getDefaultGeminiVeoModel();
+                } else if ("POST".equals(selectedTemplate.type())) {
+                    model = config.getDefaultGeminiModel();
+                }
+                if ("IMAGE".equals(selectedTemplate.type())) {
+                    geminiImagesServices.generateImage(model, config, content);
+                    Path resultPath = Path.of("generated/" + config.getDefaultResultFilename());
+                    if (Files.exists(resultPath)) {
+                        historyService.addEntry(selectedTemplate.name(), prompt, resultPath);
+                        Jt.success("✅ Généré et sauvegardé !").use();
+                    }
+                } else if ("VIDEO".equals(selectedTemplate.type())) {
+                    geminiVideoServices.generateVideo(prompt, config);
+                    Path resultPath = Path.of("generated/" + config.getDefaultResultFilenameVideo());
+                    if (Files.exists(resultPath)) {
+                        historyService.addEntry(selectedTemplate.name(), prompt, resultPath);
+                        Jt.success("✅ Vidéo générée et sauvegardée !").use();
+                    }
+                } else if ("POST".equals(selectedTemplate.type())) {
+                    String generatedText = geminiTextServices.generateText(model, content);
+                    if (generatedText != null && !generatedText.isBlank()) {
+                        Jt.sessionState().put("generatedText", generatedText);
+                        Jt.success("✅ Texte généré avec succès !").use();
+                    }
+                }
+            } catch (Exception e) {
+                Jt.error("❌ " + e.getMessage()).use();
+                Log.error("Generation error", e);
+            }
+        }
+
+        Jt.markdown("---").key("gen-sep-header").use();
+
+        var cols = Jt.columns(3).key("gen-main-cols").use();
         var col0 = cols.col(0);
         var col1 = cols.col(1);
         var col2 = cols.col(2);
@@ -149,7 +183,6 @@ public class GenerateUICommand implements Runnable {
         }
 
         // --- Column 2: Inputs ---
-        Map<String, String> fieldValues = new HashMap<>();
         Jt.subheader("📝 Variables").use(col1);
         for (String field : selectedTemplate.fields()) {
             if (field.contains("PHOTO")) {
@@ -190,45 +223,47 @@ public class GenerateUICommand implements Runnable {
             }
         }
 
-        if (generateClicked) {
-            Jt.info("⏳ Génération...").use(col1);
-            try {
-                updateConfig(fieldValues);
-                String prompt = templateService.preparePrompt(selectedTemplate, config);
-                Content content = prepareContent(selectedTemplate, prompt);
-                String model = "IMAGE".equals(selectedTemplate.type()) ? config.getDefaultGeminiModelImage()
-                        : config.getDefaultGeminiVeoModel();
-
-                if ("IMAGE".equals(selectedTemplate.type())) {
-                    geminiImagesServices.generateImage(model, config, content);
-                    Path resultPath = Path.of("generated/" + config.getDefaultResultFilename());
-                    if (Files.exists(resultPath)) {
-                        historyService.addEntry(selectedTemplate.name(), prompt, resultPath);
-                        Jt.success("✅ Généré et sauvegardé !").use(col1);
-                    }
-                }
-            } catch (Exception e) {
-                Jt.error("❌ " + e.getMessage()).use(col1);
-                Log.error("Generation error", e);
-            }
-        }
+        // Update config with new field values for next generation
+        updateConfig(fieldValues);
 
         // --- Column 3: Result ---
         Jt.subheader("✨ Résultat").use(col2);
-        Path resultPath = Path.of("generated/" + config.getDefaultResultFilename());
-        if (Files.exists(resultPath)) {
-            try {
-                Jt.image(Files.readAllBytes(resultPath)).use(col2);
-                Jt.text("Généré : " + config.getDefaultResultFilename()).use(col2);
-            } catch (IOException e) {
-                Jt.error("Display error: " + e.getMessage()).use(col2);
+
+        // Display result based on template type
+        if ("VIDEO".equals(selectedTemplate.type())) {
+            Path videoResultPath = Path.of("generated/" + config.getDefaultResultFilenameVideo());
+            if (Files.exists(videoResultPath)) {
+                try {
+                    Jt.success("🎬 Vidéo générée avec succès !").use(col2);
+                    Jt.text("Fichier : " + config.getDefaultResultFilenameVideo()).use(col2);
+                    Jt.markdown("📥 [Télécharger la vidéo](generated/" + config.getDefaultResultFilenameVideo() + ")")
+                            .use(col2);
+                } catch (Exception e) {
+                    Jt.error("Display error: " + e.getMessage()).use(col2);
+                }
+            }
+        } else if ("IMAGE".equals(selectedTemplate.type())) {
+            Path imageResultPath = Path.of("generated/" + config.getDefaultResultFilename());
+            if (Files.exists(imageResultPath)) {
+                try {
+                    Jt.image(Files.readAllBytes(imageResultPath)).use(col2);
+                    Jt.text("Généré : " + config.getDefaultResultFilename()).use(col2);
+                } catch (IOException e) {
+                    Jt.error("Display error: " + e.getMessage()).use(col2);
+                }
+            }
+        } else if ("POST".equals(selectedTemplate.type())) {
+            // Display generated text from session state
+            String generatedText = (String) Jt.sessionState().get("generatedText");
+            if (generatedText != null && !generatedText.isBlank()) {
+                Jt.markdown("### 📝 Texte généré").use(col2);
+                Jt.markdown(generatedText).use(col2);
             }
         }
     }
 
     public void renderHistory() {
-        Jt.title("📜 History").use();
-        Jt.header("Historique des Générations").use();
+        Jt.title("📜 Historique des Générations").use();
         List<HistoryEntry> history = historyService.getHistory();
 
         if (history.isEmpty()) {
@@ -241,7 +276,9 @@ public class GenerateUICommand implements Runnable {
         for (HistoryEntry entry : history) {
             var exp = Jt.expander(entry.templateName() + " - " + entry.timestamp().format(formatter)).use();
 
-            var entryCols = Jt.columns(2).use(exp);
+            var entryCols = Jt.columns(2)
+                    .key("cols-" + entry.imagePath())
+                    .use(exp);
             var colPrompt = entryCols.col(0);
             var colImage = entryCols.col(1);
 
@@ -251,14 +288,20 @@ public class GenerateUICommand implements Runnable {
             try {
                 Path p = Path.of(entry.imagePath());
                 if (Files.exists(p)) {
-                    Jt.image(Files.readAllBytes(p)).use(colImage);
+                    // Check if it's a video file
+                    if (entry.imagePath().toLowerCase().endsWith(".mp4")) {
+                        Jt.success("🎬 Vidéo").use(colImage);
+                        Jt.markdown("📥 [Télécharger](" + entry.imagePath() + ")").use(colImage);
+                    } else {
+                        Jt.image(Files.readAllBytes(p)).use(colImage);
+                    }
                 } else {
-                    Jt.warning("Image non trouvée: " + entry.imagePath()).use(colImage);
+                    Jt.warning("Fichier non trouvé: " + entry.imagePath()).use(colImage);
                 }
             } catch (IOException e) {
-                Jt.error("Error loading image").use(colImage);
+                Jt.error("Error loading file").use(colImage);
             }
-            Jt.markdown("---").use();
+            Jt.markdown("---").key("hist-sep-" + entry.imagePath()).use();
         }
     }
 
@@ -285,6 +328,7 @@ public class GenerateUICommand implements Runnable {
                 case "PHOTO2" -> config.setDefaultPhoto2(value);
                 case "PHOTO3" -> config.setDefaultPhoto3(value);
                 case "CONF_PHOTO" -> config.setDefaultConfPhoto(value);
+                case "CONF" -> config.setDefaultConf(value);
                 case "PROMPT" -> config.setDefaultPrompt(value);
             }
         });

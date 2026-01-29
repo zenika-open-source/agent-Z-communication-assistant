@@ -6,11 +6,14 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class ConfigProperties {
 
-    @ConfigProperty(name = "app.gemini.model")
+    @ConfigProperty(name = "app.gemini.model.image")
     String defaultGeminiModelImage;
 
     @ConfigProperty(name = "app.gemini.model.veo")
     String defaultGeminiVeoModel;
+
+    @ConfigProperty(name = "app.gemini.model")
+    String defaultGeminiModel;
 
     @ConfigProperty(name = "app.result.filename")
     String defaultResultFilename;
@@ -59,6 +62,9 @@ public class ConfigProperties {
 
     @ConfigProperty(name = "app.conf_photo", defaultValue = "")
     String defaultConfPhoto;
+
+    @ConfigProperty(name = "app.conf", defaultValue = "")
+    String defaultConf;
 
     public String getDefaultGeminiModelImage() {
         return defaultGeminiModelImage;
@@ -126,6 +132,10 @@ public class ConfigProperties {
 
     public String getDefaultConfPhoto() {
         return defaultConfPhoto;
+    }
+
+    public String getDefaultConf() {
+        return defaultConf;
     }
 
     public String getDefaultResultFilenameVideo() {
@@ -204,6 +214,10 @@ public class ConfigProperties {
         this.defaultConfPhoto = defaultConfPhoto;
     }
 
+    public void setDefaultConf(String defaultConf) {
+        this.defaultConf = defaultConf;
+    }
+
     public void setDefaultResultFilenameVideo(String defaultResultFilenameVideo) {
         this.defaultResultFilenameVideo = defaultResultFilenameVideo;
     }
@@ -219,9 +233,18 @@ public class ConfigProperties {
             case PHOTO2 -> config.getDefaultPhoto2();
             case PHOTO3 -> config.getDefaultPhoto3();
             case CONF_PHOTO -> config.getDefaultConfPhoto();
+            case CONF -> config.getDefaultConf();
             case PROMPT -> config.getDefaultPrompt();
             default -> "";
         };
+    }
+
+    public String getDefaultGeminiModel() {
+        return this.defaultGeminiModel;
+    }
+
+    public void setDefaultGeminiModel(String model) {
+        this.defaultGeminiModel = model;
     }
 
 }

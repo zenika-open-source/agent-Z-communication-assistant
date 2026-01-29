@@ -85,8 +85,12 @@
     "description": "Generate a Linkedin & Bluesky post",
     "type": "POST",
     "template": "",
-    "fields": [],
-    "prompt": "I'd like to create two post to announce %s as a speaker for the conference %s in %s. The first one is for Linkedin, the second for Bluesky."
+    "fields": [
+      "NAME",
+      "CONF",
+      "TITLE"
+    ],
+    "prompt": "I'd like to create two posts in French to announce %NAME% as a speaker for the conference %CONF% presenting the talk '%TITLE%'. The first one is for Linkedin, the second for Bluesky."
   },
   {
     "name": "generate-image-from-prompt",
