@@ -14,7 +14,7 @@
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <skipITs>true</skipITs>
     <compiler-plugin.version>3.11.0</compiler-plugin.version>
-    <maven.compiler.release>25</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
     <quarkus.platform.version>3.27.0</quarkus.platform.version>
     <surefire-plugin.version>3.2.5</surefire-plugin.version>
   </properties>
@@ -113,11 +113,10 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
         <configuration>
-          <source>25</source>
-          <target>25</target>
+          <source>21</source>
+          <target>21</target>
           <compilerArgs>
             <arg>-parameters</arg>
-            <arg>--enable-preview</arg>
           </compilerArgs>
         </configuration>
       </plugin>
