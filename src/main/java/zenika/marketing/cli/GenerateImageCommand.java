@@ -70,6 +70,9 @@ public class GenerateImageCommand implements Runnable {
     @Option(names = { "--template-name" }, description = "Name of the template to use", required = true)
     String templateName;
 
+    @Option(names = { "--job-title" }, description = "Job title")
+    String jobTitle;
+
     private final Map<String, Consumer<Template>> templateHandlers = Map.of(
             "generate-image-blog-post", this::generateImageBlogPost,
             "generate-image-2-blog-post", this::generateImage2BlogPost,
@@ -77,7 +80,8 @@ public class GenerateImageCommand implements Runnable {
             "generate-image-2-speaker-event", this::generateImage2SpeakerEvent,
             "generate-image-3-speaker-event", this::generateImage3SpeakerEvent,
             "generate-image-from-prompt", this::generateImageFromPrompt,
-            "generate-image-duck-from-prompt", this::generateImageDuckFromPrompt
+            "generate-image-duck-from-prompt", this::generateImageDuckFromPrompt,
+            "generate-image-job-offer", this::generateImageJobOffer
     // generate-post-speaker-event
     );
 
@@ -322,6 +326,27 @@ public class GenerateImageCommand implements Runnable {
         prepareCallGemini(template, content, completedPrompt);
     }
 
+    private void generateImageJobOffer(Template template) {
+        Content content = null;
+        config.setDefaultJobTitle(jobTitle);
+
+        String completedPrompt = templateService.preparePrompt(template, config);
+
+        Path templateFile = Path.of(template.template());
+        checkisFileExist(templateFile);
+
+        try {
+            content = Content.fromParts(
+                    Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
+                    Part.fromText(completedPrompt));
+        } catch (Exception e) {
+            Log.error("❌ Error: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        prepareCallGemini(template, content, completedPrompt);
+    }
+
     private void prepareCallGemini(Template template, Content content, String prompt) {
         config.setDefaultResultFilename(output != null ? output : config.getDefaultResultFilename());
         config.setDefaultResultFilename(
@@ -329,7 +354,7 @@ public class GenerateImageCommand implements Runnable {
 
         String finalModel = model != null ? model : config.getDefaultGeminiModelImage();
 
-        Log.infof("-> generateImageBlogPost %s", template.name());
+        Log.info("-> generate Image " + template.name());
         Log.info("\uD83D\uDCDD \uD83D\uDC49 Prompt: \n \t " + prompt + "\n");
 
         try {
@@ -339,4 +364,5 @@ public class GenerateImageCommand implements Runnable {
             System.exit(1);
         }
     }
+
 }
