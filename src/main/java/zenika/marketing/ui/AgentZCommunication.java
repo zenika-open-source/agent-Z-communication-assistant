@@ -340,6 +340,7 @@ public class AgentZCommunication implements Runnable {
                 case "CONF_PHOTO" -> config.setDefaultConfPhoto(value);
                 case "CONF" -> config.setDefaultConf(value);
                 case "PROMPT" -> config.setDefaultPrompt(value);
+                case "JOB_TITLE" -> config.setDefaultJobTitle(value);
             }
         });
     }

@@ -111,5 +111,15 @@
       "PROMPT"
     ],
     "prompt": "I would like to create an image based on this prompt: %PROMPT%. Add the Zenika red duck on the image, smiling and very happy."
+  },
+  {
+    "name": "generate-job-offer",
+    "description": "Generate an visual to announce a job offer",
+    "type": "IMAGE",
+    "template": "images/templates/offre-emploi-job-title.png",
+    "fields": [
+      "JOB_TITLE"
+    ],
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace <job title>c by %JOB_TITLE% respecting the colors. Please center this title and use 2 lines at maximum."
   }
 ]

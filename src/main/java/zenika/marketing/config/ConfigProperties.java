@@ -66,6 +66,8 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.conf", defaultValue = "")
     String defaultConf;
 
+    String defaultJobTitle;
+
     public String getDefaultGeminiModelImage() {
         return defaultGeminiModelImage;
     }
@@ -140,6 +142,10 @@ public class ConfigProperties {
 
     public String getDefaultResultFilenameVideo() {
         return defaultResultFilenameVideo;
+    }
+
+    public String getDefaultJobTitle() {
+        return defaultJobTitle;
     }
 
     public void setDefaultPhoto2(String defaultPhoto2) {
@@ -222,6 +228,10 @@ public class ConfigProperties {
         this.defaultResultFilenameVideo = defaultResultFilenameVideo;
     }
 
+    public void setDefaultJobTitle(String defaultJobTitle) {
+        this.defaultJobTitle = defaultJobTitle;
+    }
+
     public String getFieldByValue(String field, ConfigProperties config) {
         return switch (FIELDS_PROMPT.valueOf(field)) {
             case NAME, NAME1 -> config.getDefaultName();
@@ -235,6 +245,7 @@ public class ConfigProperties {
             case CONF_PHOTO -> config.getDefaultConfPhoto();
             case CONF -> config.getDefaultConf();
             case PROMPT -> config.getDefaultPrompt();
+            case JOB_TITLE -> config.getDefaultJobTitle();
             default -> "";
         };
     }
