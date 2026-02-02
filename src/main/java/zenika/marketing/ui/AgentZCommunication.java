@@ -56,12 +56,22 @@ public class AgentZCommunication implements Runnable {
 
     @Override
     public void run() {
-        Log.info("🚀 Starting Javelit UI on port 8501...");
+        int port = 8501;
+        String envPort = System.getenv("PORT");
+        if (envPort != null && !envPort.isBlank()) {
+            try {
+                port = Integer.parseInt(envPort);
+            } catch (NumberFormatException e) {
+                Log.warn("Invalid PORT environment variable, defaulting to 8501");
+            }
+        }
 
-        Server server = Server.builder(this::renderApp, 8501).build();
+        Log.info("🚀 Starting Javelit UI on port " + port + "...");
+
+        Server server = Server.builder(this::renderApp, port).build();
         server.start();
 
-        Log.info("🌐 UI available at http://localhost:8501");
+        Log.info("🌐 UI available at http://localhost:" + port);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             Log.info("Stopping Javelit UI server...");
