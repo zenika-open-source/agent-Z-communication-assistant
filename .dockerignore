@@ -1,0 +1,8 @@
+.git/
+.gitignore
+.env
+cp.txt
+.vscode/
+README.md
+.agents/
+*.md

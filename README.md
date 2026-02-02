@@ -50,10 +50,12 @@ This Quarkus project uses Gemini and google-genai library to generate images fro
    google.ai.api.key=your-api-key-here
    ```
 
-3. **Build the project**
+3. **Run the project**
    ```bash
-   mvn clean compile
+   mvn quarkus:dev -Dquarkus.args="ui"
    ```
+
+The web interface will be available at [http://localhost:8501](http://localhost:8501).
 
 ## 🐳 Docker
 
@@ -83,6 +85,31 @@ You can also run the application using Docker:
 
    The web interface will be available at [http://localhost:8501](http://localhost:8501).
 
+## ☁️ Deploy to Google Cloud Run
+
+To deploy the application to Cloud Run:
+
+1. **Build the JAR:**
+
+   ```bash
+   mvn clean package
+   ```
+
+2. **Submit the build to Cloud Build:**
+
+   ```bash
+   gcloud run deploy agent-z-communication-assistant \
+   --source . \
+   --region $GOOGLE_CLOUD_LOCATION \
+   --project $GOOGLE_CLOUD_PROJECT_ID \
+   --allow-unauthenticated \
+   --memory 1Gi \
+   --max-instances 1 \
+   --set-env-vars="GOOGLE_CLOUD_PROJECT=$GCLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GCLOUD_LOCATION,GOOGLE_GENAI_USE_VERTEXAI=$GCLOUD_GENAI_USE_VERTEXAI,GOOGLE_API_KEY=$GCLOUD_API_KEY"
+   ```
+
+   > **Note:** The application listens on port 8501 (Javelit UI). We configure Cloud Run to route traffic to this port.
+
 ## 🚀 Usage
 
 ### Web Interface (UI)
@@ -92,7 +119,7 @@ The easiest way to use the assistant is via the web interface:
 1. Start the application
 2. Open [http://localhost:8501](http://localhost:8501) in your browser
 3. Select a template and fill in the fields
-4. Click **GENERATE** !
+4. Click on the **GENERATE** button
 
 ### Command Line Interface
 
