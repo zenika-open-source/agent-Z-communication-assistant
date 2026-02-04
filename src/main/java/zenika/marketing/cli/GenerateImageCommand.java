@@ -82,6 +82,7 @@ public class GenerateImageCommand implements Runnable {
             "generate-image-from-prompt", this::generateImageFromPrompt,
             "generate-image-duck-from-prompt", this::generateImageDuckFromPrompt,
             "generate-image-job-offer", this::generateImageJobOffer
+            "generate-image-blog-zenika", this::generateImageBlogZenika
     // generate-post-speaker-event
     );
 
@@ -338,6 +339,24 @@ public class GenerateImageCommand implements Runnable {
         try {
             content = Content.fromParts(
                     Part.fromBytes(Files.readAllBytes(templateFile), Utils.getMimeType(templateFile.toString())),
+                    Part.fromText(completedPrompt));
+        } catch (Exception e) {
+            Log.error("❌ Error: " + e.getMessage(), e);
+            System.exit(1);
+        }
+
+        prepareCallGemini(template, content, completedPrompt);
+    }
+
+    private void generateImageBlogZenika(Template template) {
+        Content content = null;
+        config.setDefaultTitle(title != null ? title : config.getDefaultTitle());
+        config.setDefaultName(name != null ? name : config.getDefaultName());
+
+        String completedPrompt = templateService.preparePrompt(template, config);
+
+        try {
+            content = Content.fromParts(
                     Part.fromText(completedPrompt));
         } catch (Exception e) {
             Log.error("❌ Error: " + e.getMessage(), e);
