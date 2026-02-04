@@ -121,5 +121,16 @@
       "JOB_TITLE"
     ],
     "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace <job title>c by %JOB_TITLE% respecting the colors. Please center this title and use 2 lines at maximum."
+  },
+  {
+    "name": "generate-image-blog-zenika",
+    "description": "Generate an image to promote and illustrate a blog post on the Zenika blog",
+    "type": "IMAGE",
+    "template": "",
+    "fields": [
+      "TITLE",
+      "NAME"
+    ],
+    "prompt": "A professional and minimalist background image for a tech blog post titled '%TITLE%' by %NAME%. The style should be modern and clean. A semi-transparent black layer (60% opacity) overlay all the image. The text '%TITLE%' and 'par %NAME%' must be clearly written in the center in a bold, white, elegant Nunito font."
   }
 ]
