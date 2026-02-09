@@ -105,7 +105,7 @@ To deploy the application to Cloud Run:
    --allow-unauthenticated \
    --memory 1Gi \
    --max-instances 1 \
-   --set-env-vars="GOOGLE_CLOUD_PROJECT=$GCLOUD_PROJECT,GOOGLE_CLOUD_LOCATION=$GCLOUD_LOCATION,GOOGLE_GENAI_USE_VERTEXAI=$GCLOUD_GENAI_USE_VERTEXAI,GOOGLE_API_KEY=$GCLOUD_API_KEY"
+   --set-env-vars="GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT_ID,GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION,GOOGLE_GENAI_USE_VERTEXAI=$GCLOUD_GENAI_USE_VERTEXAI,GOOGLE_API_KEY=$GOOGLE_API_KEY"
    ```
 
    > **Note:** The application listens on port 8501 (Javelit UI). We configure Cloud Run to route traffic to this port.

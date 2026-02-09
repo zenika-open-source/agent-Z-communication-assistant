@@ -155,6 +155,8 @@ public class AgentZCommunication implements Runnable {
                     geminiImagesServices.generateImage(model, config, content);
                     Path resultPath = Path.of("generated/" + config.getDefaultResultFilename());
                     if (Files.exists(resultPath)) {
+                        // Store result path in session state
+                        Jt.sessionState().put("lastGeneratedImage", resultPath.toString());
                         addToSessionHistory(selectedTemplate.name(), prompt, resultPath);
                         Jt.success("✅ Généré et sauvegardé !").use();
                     }
@@ -162,6 +164,9 @@ public class AgentZCommunication implements Runnable {
                     geminiVideoServices.generateVideo(prompt, config);
                     Path resultPath = Path.of("generated/" + config.getDefaultResultFilenameVideo());
                     if (Files.exists(resultPath)) {
+                        // Store result path in session state
+                        Jt.sessionState().put("lastGeneratedVideo", resultPath.toString());
+                        Jt.sessionState().put("lastGeneratedVideoFilename", config.getDefaultResultFilenameVideo());
                         addToSessionHistory(selectedTemplate.name(), prompt, resultPath);
                         Jt.success("✅ Vidéo générée et sauvegardée !").use();
                     }
@@ -247,23 +252,26 @@ public class AgentZCommunication implements Runnable {
 
         // Display result based on template type
         if ("VIDEO".equals(selectedTemplate.type())) {
-            Path videoResultPath = Path.of("generated/" + config.getDefaultResultFilenameVideo());
-            if (Files.exists(videoResultPath)) {
+            // Only display if this user generated a video in their session
+            String videoPath = (String) Jt.sessionState().get("lastGeneratedVideo");
+            String videoFilename = (String) Jt.sessionState().get("lastGeneratedVideoFilename");
+            if (videoPath != null && Files.exists(Path.of(videoPath))) {
                 try {
                     Jt.success("🎬 Vidéo générée avec succès !").use(col2);
-                    Jt.text("Fichier : " + config.getDefaultResultFilenameVideo()).use(col2);
-                    Jt.markdown("📥 [Télécharger la vidéo](generated/" + config.getDefaultResultFilenameVideo() + ")")
+                    Jt.text("Fichier : " + videoFilename).use(col2);
+                    Jt.markdown("📥 [Télécharger la vidéo](" + videoPath + ")")
                             .use(col2);
                 } catch (Exception e) {
                     Jt.error("Display error: " + e.getMessage()).use(col2);
                 }
             }
         } else if ("IMAGE".equals(selectedTemplate.type())) {
-            Path imageResultPath = Path.of("generated/" + config.getDefaultResultFilename());
-            if (Files.exists(imageResultPath)) {
+            // Only display if this user generated an image in their session
+            String imagePath = (String) Jt.sessionState().get("lastGeneratedImage");
+            if (imagePath != null && Files.exists(Path.of(imagePath))) {
                 try {
-                    Jt.image(Files.readAllBytes(imageResultPath)).use(col2);
-                    Jt.text("Généré : " + config.getDefaultResultFilename()).use(col2);
+                    Jt.image(Files.readAllBytes(Path.of(imagePath))).use(col2);
+                    Jt.text("Généré : " + Path.of(imagePath).getFileName()).use(col2);
                 } catch (IOException e) {
                     Jt.error("Display error: " + e.getMessage()).use(col2);
                 }
