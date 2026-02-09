@@ -135,7 +135,13 @@ public class AgentZCommunication implements Runnable {
         if (generateClicked) {
             Jt.info("⏳ Génération...").use();
             try {
-                String prompt = templateService.preparePrompt(selectedTemplate, config);
+                // Build session values map for this user
+                Map<String, String> sessionValues = new HashMap<>();
+                for (String field : selectedTemplate.fields()) {
+                    sessionValues.put(field, getSessionFieldValue(field));
+                }
+
+                String prompt = templateService.preparePrompt(selectedTemplate, config, sessionValues);
                 Content content = prepareContent(selectedTemplate, prompt);
 
                 String model = config.getDefaultGeminiModelImage();
@@ -149,14 +155,14 @@ public class AgentZCommunication implements Runnable {
                     geminiImagesServices.generateImage(model, config, content);
                     Path resultPath = Path.of("generated/" + config.getDefaultResultFilename());
                     if (Files.exists(resultPath)) {
-                        historyService.addEntry(selectedTemplate.name(), prompt, resultPath);
+                        addToSessionHistory(selectedTemplate.name(), prompt, resultPath);
                         Jt.success("✅ Généré et sauvegardé !").use();
                     }
                 } else if ("VIDEO".equals(selectedTemplate.type())) {
                     geminiVideoServices.generateVideo(prompt, config);
                     Path resultPath = Path.of("generated/" + config.getDefaultResultFilenameVideo());
                     if (Files.exists(resultPath)) {
-                        historyService.addEntry(selectedTemplate.name(), prompt, resultPath);
+                        addToSessionHistory(selectedTemplate.name(), prompt, resultPath);
                         Jt.success("✅ Vidéo générée et sauvegardée !").use();
                     }
                 } else if ("POST".equals(selectedTemplate.type())) {
@@ -212,7 +218,7 @@ public class AgentZCommunication implements Runnable {
                         Jt.error("Upload Error: " + e.getMessage()).use(col1);
                     }
                 } else {
-                    String current = config.getFieldByValue(field, config);
+                    String current = getSessionFieldValue(field);
                     if (current != null && !current.isBlank()) {
                         try {
                             Path p = Path.of(current);
@@ -225,10 +231,10 @@ public class AgentZCommunication implements Runnable {
                     }
                 }
             } else if (field.contains("PROMPT")) {
-                String defaultValue = config.getFieldByValue(field, config);
+                String defaultValue = getSessionFieldValue(field);
                 fieldValues.put(field, Jt.textArea(field).value(defaultValue).use(col1));
             } else {
-                String defaultValue = config.getFieldByValue(field, config);
+                String defaultValue = getSessionFieldValue(field);
                 fieldValues.put(field, Jt.textInput(field).value(defaultValue).use(col1));
             }
         }
@@ -274,7 +280,7 @@ public class AgentZCommunication implements Runnable {
 
     public void renderHistory() {
         Jt.title("📜 Historique des Générations").use();
-        List<HistoryEntry> history = historyService.getHistory();
+        List<HistoryEntry> history = getSessionHistory();
 
         if (history.isEmpty()) {
             Jt.info("Aucun historique pour le moment.").use();
@@ -284,7 +290,9 @@ public class AgentZCommunication implements Runnable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         for (HistoryEntry entry : history) {
-            var exp = Jt.expander(entry.templateName() + " - " + entry.timestamp().format(formatter)).use();
+            var exp = Jt.expander(entry.templateName() + " - " + entry.timestamp().format(formatter))
+                    .key("exp-" + entry.imagePath())
+                    .use();
 
             var entryCols = Jt.columns(2)
                     .key("cols-" + entry.imagePath())
@@ -326,23 +334,21 @@ public class AgentZCommunication implements Runnable {
     }
 
     private void updateConfig(Map<String, String> values) {
+        // Store values in session state instead of shared config
         values.forEach((field, value) -> {
-            if (value == null || value.isBlank())
-                return;
-            switch (field) {
-                case "NAME" -> config.setDefaultName(value);
-                case "NAME2" -> config.setDefaultName2(value);
-                case "NAME3" -> config.setDefaultName3(value);
-                case "TITLE" -> config.setDefaultTitle(value);
-                case "PHOTO" -> config.setDefaultPhoto(value);
-                case "PHOTO2" -> config.setDefaultPhoto2(value);
-                case "PHOTO3" -> config.setDefaultPhoto3(value);
-                case "CONF_PHOTO" -> config.setDefaultConfPhoto(value);
-                case "CONF" -> config.setDefaultConf(value);
-                case "PROMPT" -> config.setDefaultPrompt(value);
-                case "JOB_TITLE" -> config.setDefaultJobTitle(value);
+            if (value != null && !value.isBlank()) {
+                Jt.sessionState().put(field, value);
             }
         });
+    }
+
+    private String getSessionFieldValue(String field) {
+        // Check session state first, then fall back to config defaults
+        Object sessionValue = Jt.sessionState().get(field);
+        if (sessionValue != null && !sessionValue.toString().isBlank()) {
+            return sessionValue.toString();
+        }
+        return config.getFieldByValue(field, config);
     }
 
     private Content prepareContent(Template template, String prompt) throws IOException {
@@ -354,7 +360,8 @@ public class AgentZCommunication implements Runnable {
         }
         for (String field : template.fields()) {
             if (field.contains("PHOTO")) {
-                String path = config.getFieldByValue(field, config);
+                // Use session-specific value instead of shared config
+                String path = getSessionFieldValue(field);
                 if (path != null && !path.isBlank()) {
                     Path p = Path.of(path);
                     if (Files.exists(p))
@@ -364,5 +371,44 @@ public class AgentZCommunication implements Runnable {
         }
         parts.add(Part.fromText(prompt));
         return Content.fromParts(parts.toArray(new Part[0]));
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<HistoryEntry> getSessionHistory() {
+        Object historyObj = Jt.sessionState().get("userHistory");
+        if (historyObj instanceof List) {
+            return (List<HistoryEntry>) historyObj;
+        }
+        return new ArrayList<>();
+    }
+
+    private void addToSessionHistory(String templateName, String prompt, Path sourceImagePath) {
+        try {
+            // Copy file to history directory
+            Path historyDir = Path.of("generated/history");
+            Files.createDirectories(historyDir);
+
+            String fileName = System.currentTimeMillis() + "_" + sourceImagePath.getFileName().toString();
+            Path targetPath = historyDir.resolve(fileName);
+            Files.copy(sourceImagePath, targetPath);
+
+            // Create history entry
+            HistoryEntry entry = new HistoryEntry(templateName, prompt, targetPath.toString(),
+                    java.time.LocalDateTime.now());
+
+            // Get or create session history
+            List<HistoryEntry> history = getSessionHistory();
+            if (!(Jt.sessionState().get("userHistory") instanceof List)) {
+                history = new ArrayList<>();
+            }
+            history.add(0, entry);
+
+            // Store back in session
+            Jt.sessionState().put("userHistory", history);
+
+            Log.info("Added history entry to session");
+        } catch (IOException e) {
+            Log.error("Failed to add history entry", e);
+        }
     }
 }

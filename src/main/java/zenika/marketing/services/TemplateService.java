@@ -11,6 +11,7 @@ import zenika.marketing.domain.Template;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -71,6 +72,10 @@ public class TemplateService {
     }
 
     public String preparePrompt(Template temp, ConfigProperties config) {
+        return preparePrompt(temp, config, Collections.emptyMap());
+    }
+
+    public String preparePrompt(Template temp, ConfigProperties config, Map<String, String> sessionOverrides) {
         var finalPrompt = temp.prompt();
         var templateRegex = "%".concat(FIELDS_PROMPT.TEMPLATE.getValue()).concat("%");
 
@@ -81,7 +86,8 @@ public class TemplateService {
         if (!temp.fields().isEmpty()) {
             for (String field : temp.fields()) {
                 if (finalPrompt.contains("%" + field + "%")) {
-                    String value = config.getFieldByValue(field, config);
+                    // Check session overrides first, then fall back to config
+                    String value = sessionOverrides.getOrDefault(field, config.getFieldByValue(field, config));
                     finalPrompt = finalPrompt.replace("%" + field + "%", value != null ? value : "");
                 }
             }

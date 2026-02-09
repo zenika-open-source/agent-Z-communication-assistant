@@ -81,7 +81,7 @@ public class GenerateImageCommand implements Runnable {
             "generate-image-3-speaker-event", this::generateImage3SpeakerEvent,
             "generate-image-from-prompt", this::generateImageFromPrompt,
             "generate-image-duck-from-prompt", this::generateImageDuckFromPrompt,
-            "generate-image-job-offer", this::generateImageJobOffer
+            "generate-image-job-offer", this::generateImageJobOffer,
             "generate-image-blog-zenika", this::generateImageBlogZenika
     // generate-post-speaker-event
     );
