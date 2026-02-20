@@ -1,3 +1,8 @@
+# [v1.1.1](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.1.0...v1.1.1) (2026-02-20)
+
+## 🐛 Bug Fixes
+- [`9e304ac`](https://github.com/zenika-open-source/agent-Z-communication-assistant/commit/9e304ac)  Add template file to add city on job offer template (#38) (Issues: [`#38`](https://github.com/zenika-open-source/agent-Z-communication-assistant/issues/38))
+
 # [v1.1.0](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.0.0...v1.1.0) (2026-02-20)
 
 ## ✨ New Features
