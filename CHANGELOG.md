@@ -1,3 +1,8 @@
+# [v1.1.0](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.0.0...v1.1.0) (2026-02-20)
+
+## ✨ New Features
+- [`1bfa0de`](https://github.com/zenika-open-source/agent-Z-communication-assistant/commit/1bfa0de)  Add a city as a parameter for the generate-job-offer template (#37) (Issues: [`#37`](https://github.com/zenika-open-source/agent-Z-communication-assistant/issues/37))
+
 # v1.0.0 (2026-02-09)
 
 ## ✨ New Features
