@@ -118,9 +118,10 @@
     "type": "IMAGE",
     "template": "images/templates/offre-emploi-job-title.png",
     "fields": [
-      "JOB_TITLE"
+      "JOB_TITLE",
+      "CITY"
     ],
-    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace <job title>c by %JOB_TITLE% respecting the colors. Please center this title and use 2 lines at maximum."
+    "prompt": "I would like to create an image from the template image available in this file %TEMPLATE% integrating these elements: - replace <job title>c by %JOB_TITLE% respecting the colors. Please center this title and use 2 lines at maximum. - replace <city> by %CITY%."
   },
   {
     "name": "generate-image-blog-zenika",
