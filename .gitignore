@@ -103,18 +103,6 @@ out/
 # JVM Crash logs
 hs_err_pid*
 
-# Eclipse
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.loadpath
-.recommenders
-
 # IntelliJ IDEA
 .idea/
 *.iws
@@ -135,6 +123,7 @@ out/
 # Quarkus specific
 .quarkus/
 quarkus.log
-images/
-!images/templates
+images/people
+images/conf
+images/uploads
 /generated/*

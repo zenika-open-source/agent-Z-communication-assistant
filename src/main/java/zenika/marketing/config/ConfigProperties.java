@@ -66,7 +66,11 @@ public class ConfigProperties {
     @ConfigProperty(name = "app.conf", defaultValue = "")
     String defaultConf;
 
+    @ConfigProperty(name = "app.job_title", defaultValue = "")
     String defaultJobTitle;
+
+    @ConfigProperty(name = "app.city", defaultValue = "")
+    String defaultCity;
 
     public String getDefaultGeminiModelImage() {
         return defaultGeminiModelImage;
@@ -146,6 +150,10 @@ public class ConfigProperties {
 
     public String getDefaultJobTitle() {
         return defaultJobTitle;
+    }
+
+    public String getDefaultCity() {
+        return defaultCity;
     }
 
     public void setDefaultPhoto2(String defaultPhoto2) {
@@ -232,6 +240,10 @@ public class ConfigProperties {
         this.defaultJobTitle = defaultJobTitle;
     }
 
+    public void setDefaultCity(String defaultCity) {
+        this.defaultCity = defaultCity;
+    }
+
     public String getFieldByValue(String field, ConfigProperties config) {
         return switch (FIELDS_PROMPT.valueOf(field)) {
             case NAME, NAME1 -> config.getDefaultName();
@@ -246,6 +258,7 @@ public class ConfigProperties {
             case CONF -> config.getDefaultConf();
             case PROMPT -> config.getDefaultPrompt();
             case JOB_TITLE -> config.getDefaultJobTitle();
+            case CITY -> config.getDefaultCity();
             default -> "";
         };
     }
