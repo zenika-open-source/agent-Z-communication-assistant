@@ -1,3 +1,8 @@
+# [v1.2.0](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.1.1...v1.2.0) (2026-03-02)
+
+## ✨ New Features
+- [`1961be4`](https://github.com/zenika-open-source/agent-Z-communication-assistant/commit/1961be4)  ⬆️ Update Gemini 3.1 (#39) (Issues: [`#39`](https://github.com/zenika-open-source/agent-Z-communication-assistant/issues/39))
+
 # [v1.1.1](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.1.0...v1.1.1) (2026-02-20)
 
 ## 🐛 Bug Fixes
