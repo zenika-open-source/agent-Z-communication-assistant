@@ -15,7 +15,7 @@
     <skipITs>true</skipITs>
     <compiler-plugin.version>3.15.0</compiler-plugin.version>
     <maven.compiler.release>21</maven.compiler.release>
-    <quarkus.platform.version>3.38.0</quarkus.platform.version>
+    <quarkus.platform.version>3.38.1</quarkus.platform.version>
     <surefire-plugin.version>3.5.6</surefire-plugin.version>
   </properties>
   <dependencyManagement>
