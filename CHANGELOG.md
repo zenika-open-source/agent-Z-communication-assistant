@@ -1,3 +1,8 @@
+# [v1.2.1](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.2.0...v1.2.1) (2026-09-08)
+
+## 🐛 Bug Fixes
+- [`51b7aee`](https://github.com/zenika-open-source/agent-Z-communication-assistant/commit/51b7aee)  replace secret with GITHUB_TOKEN
+
 # [v1.2.0](https://github.com/zenika-open-source/agent-Z-communication-assistant/compare/v1.1.1...v1.2.0) (2026-03-02)
 
 ## ✨ New Features
